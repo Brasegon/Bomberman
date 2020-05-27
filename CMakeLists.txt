@@ -48,7 +48,7 @@ add_executable(bomberman
 
 # Find library package
 find_package(Irrlicht 1.8.4 REQUIRED)
-find_package(SFML 2.4 REQUIRED)
+find_package(SFML 2.5.1 REQUIRED)
 
 # Link external libaries to executable
 if (UNIX)

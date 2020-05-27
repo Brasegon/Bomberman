@@ -5,3 +5,4 @@ rm -f Makefile
 rm -rf CMakeFiles
 rm -f CMakeCache.txt
 rm -rf cmake_install.cmake
+rm -f bomberman
