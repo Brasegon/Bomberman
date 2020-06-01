@@ -2,30 +2,32 @@
 ** EPITECH PROJECT, 2020
 ** OOP_indie_studio_2019 [WSL: Debian]
 ** File description:
-** Engine
+** Config
 */
 
-#ifndef ENGINE_HPP_
-#define ENGINE_HPP_
+#ifndef CONFIG_HPP_
+#define CONFIG_HPP_
 #include "../my.hpp"
 #include "../Logger/Logger.hpp"
-#include "Config.hpp"
-#include "../Menu/Menu.hpp"
+
 using namespace irr;
 using namespace core;
 using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
-class Engine {
-    public:
-        Engine(int height, int width, std::wstring title);
-        void run();
-        ~Engine();
 
+class Config {
+    public:
+        Config() {}
+        ~Config() {}
+        IrrlichtDevice *device;
+        Logger log;
+        IVideoDriver* driver;
+        ISceneManager* smgr;
+        IGUIEnvironment* guienv;
     protected:
     private:
-        Config config;
 };
 
-#endif /* !ENGINE_HPP_ */
+#endif /* !CONFIG_HPP_ */

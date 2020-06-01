@@ -12,4 +12,3 @@ rm -rf x64
 rm -rf Debug
 rm -rf *.dir
 rm -f *.dll
-rm -rf .vs*

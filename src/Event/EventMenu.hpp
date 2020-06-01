@@ -2,30 +2,29 @@
 ** EPITECH PROJECT, 2020
 ** OOP_indie_studio_2019 [WSL: Debian]
 ** File description:
-** Engine
+** MyEventReceiver
 */
 
-#ifndef ENGINE_HPP_
-#define ENGINE_HPP_
+#ifndef EVENTMENU_HPP_
+#define EVENTMENU_HPP_
 #include "../my.hpp"
-#include "../Logger/Logger.hpp"
-#include "Config.hpp"
-#include "../Menu/Menu.hpp"
+
 using namespace irr;
 using namespace core;
 using namespace scene;
 using namespace video;
 using namespace io;
 using namespace gui;
-class Engine {
-    public:
-        Engine(int height, int width, std::wstring title);
-        void run();
-        ~Engine();
 
+class EventMenu : public IEventReceiver {
+    public:
+        EventMenu(Config &conf);
+        virtual bool OnEvent(const SEvent& event);
+        ~EventMenu();
+        bool isActive;
     protected:
     private:
         Config config;
 };
 
-#endif /* !ENGINE_HPP_ */
+#endif /* !EVENTMENU_HPP_ */
