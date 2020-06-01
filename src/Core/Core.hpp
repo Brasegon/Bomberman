@@ -6,6 +6,7 @@
 */
 #include "../my.hpp"
 #include "../Player/Player.hpp"
+#include "../Engine/Engine.hpp"
 
 #ifndef CORE_HPP_
 #define CORE_HPP_
@@ -19,6 +20,7 @@ class Core {
     protected:
     private:
         std::vector<Player *> playerList;
+        Engine* engine;
 };
 
 #endif /* !CORE_HPP_ */

@@ -50,6 +50,8 @@ add_executable(bomberman
                 src/Player/Player.hpp
                 src/Logger/Logger.cpp
                 src/Logger/Logger.hpp
+                src/Engine/Engine.cpp
+                src/Engine/Engine.hpp
                 src/my.hpp
                 src/main.cpp)
 

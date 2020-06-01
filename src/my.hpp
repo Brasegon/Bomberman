@@ -12,5 +12,6 @@
 #include <vector>
 #include <string>
 #include <ctime>
+#include "../include/irrlicht/irrlicht.h"
 
 #endif /* !MY_HPP_ */
