@@ -44,6 +44,13 @@ endif (WIN32)
 
 # Create executable
 add_executable(bomberman
+                src/Core/Core.cpp
+                src/Core/Core.hpp
+                src/Player/Player.cpp
+                src/Player/Player.hpp
+                src/Logger/Logger.cpp
+                src/Logger/Logger.hpp
+                src/my.hpp
                 src/main.cpp)
 
 # Find library package
