@@ -10,6 +10,7 @@
 #include "../my.hpp"
 #include "../Logger/Logger.hpp"
 #include "../Player/Player.hpp"
+#include "../Event/EventMenu.hpp"
 using namespace irr;
 using namespace core;
 using namespace scene;
@@ -27,6 +28,7 @@ class Config {
         ISceneManager* smgr;
         IGUIEnvironment* guienv;
         std::vector<Player *> playerList;
+        EventMenu *event;
     protected:
     private:
 };

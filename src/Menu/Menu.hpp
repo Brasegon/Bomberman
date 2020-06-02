@@ -15,16 +15,17 @@
 class Menu : public IScene {
     public:
         Menu(Config &conf);
-        void launch();
+        void display();
+        void update();
         void init(Config &conf);
         const Config &getUpdateConfig() const;
         ~Menu();
 
     protected:
     private:
+        void checkClick();
         Config config;
         bool isActive;
-        EventMenu *event;
         Logger log;
 };
 

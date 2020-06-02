@@ -14,7 +14,8 @@
 
 class IScene {
     public:
-        virtual void launch() = 0;
+        virtual void display() = 0;
+        virtual void update() = 0;
         virtual void init(Config &conf) = 0;
         virtual const Config &getUpdateConfig() const = 0;
     protected:

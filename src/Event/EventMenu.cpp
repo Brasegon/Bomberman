@@ -7,9 +7,8 @@
 
 #include "../Menu/Menu.hpp"
 
-EventMenu::EventMenu(Config &conf)
+EventMenu::EventMenu()
 {
-    config = conf;
 }
 
 bool EventMenu::OnEvent(const SEvent& event)
@@ -18,20 +17,19 @@ bool EventMenu::OnEvent(const SEvent& event)
         s32 id = event.GUIEvent.Caller->getID();
         switch(event.GUIEvent.EventType) {
             case EGET_BUTTON_CLICKED:
-                switch (id) {
-                case 1:
-                    config.guienv->clear();
-                    return (true);
-                case 2:
-                    config.device->closeDevice();
-                    return (true);
-                
-                default:
-                    break;
-                }
+                guiButton.first = id;
+                guiButton.second = event.GUIEvent.EventType;
             default:
 				break;
         }
+    }
+    return false;
+}
+
+bool EventMenu::isButtonClicked(irr::s32 buttonId)
+{
+    if (guiButton.first == buttonId) {
+        return true;
     }
     return false;
 }

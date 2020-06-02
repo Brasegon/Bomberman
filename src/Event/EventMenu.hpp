@@ -18,13 +18,14 @@ using namespace gui;
 
 class EventMenu : public IEventReceiver {
     public:
-        EventMenu(Config &conf);
+        EventMenu();
         virtual bool OnEvent(const SEvent& event);
+        bool isButtonClicked(irr::s32 id);
         ~EventMenu();
         bool isActive;
     protected:
     private:
-        Config config;
+        std::pair<irr::s32, irr::gui::EGUI_EVENT_TYPE> guiButton;
 };
 
 #endif /* !EVENTMENU_HPP_ */
