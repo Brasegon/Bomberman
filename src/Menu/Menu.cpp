@@ -15,7 +15,7 @@ Menu::Menu(Config &conf)
 			L"PLAY", NULL);
     config.guienv->addButton(rect<s32>(10, 240 + 32, 110, 240 + 32 * 2), 0, 2,
 			L"QUIT", NULL);
-    
+    log.printInfo("Loading Main Menu");
     event = new EventMenu(config);
     config.device->setEventReceiver(event);
 }
@@ -26,13 +26,20 @@ void Menu::init(Config &conf) {
 			L"PLAY", NULL);
     config.guienv->addButton(rect<s32>(10, 240 + 32, 110, 240 + 32 * 2), 0, 2,
 			L"QUIT", NULL);
+    log.printInfo("Loading Main Menu");
     
     event = new EventMenu(config);
     config.device->setEventReceiver(event);
 }
 
+const Config &Menu::getUpdateConfig() const
+{
+    return (config);
+}
+
 void Menu::launch()
 {
+    // std::cout << config.playerList[0]->getPlayerName() << std::endl;
     config.driver->beginScene(true, true, SColor(255, 100, 101, 140));
     config.smgr->drawAll();
     config.guienv->drawAll();

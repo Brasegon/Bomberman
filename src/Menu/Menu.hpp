@@ -10,11 +10,14 @@
 #include "../my.hpp"
 #include "../Engine/Config.hpp"
 #include "../Event/EventMenu.hpp"
-class Menu {
+#include "../Logger/Logger.hpp"
+#include "IScene.hpp"
+class Menu : public IScene {
     public:
         Menu(Config &conf);
         void launch();
         void init(Config &conf);
+        const Config &getUpdateConfig() const;
         ~Menu();
 
     protected:
@@ -22,6 +25,7 @@ class Menu {
         Config config;
         bool isActive;
         EventMenu *event;
+        Logger log;
 };
 
 #endif /* !MENU_HPP_ */

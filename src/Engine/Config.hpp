@@ -9,7 +9,7 @@
 #define CONFIG_HPP_
 #include "../my.hpp"
 #include "../Logger/Logger.hpp"
-
+#include "../Player/Player.hpp"
 using namespace irr;
 using namespace core;
 using namespace scene;
@@ -26,6 +26,7 @@ class Config {
         IVideoDriver* driver;
         ISceneManager* smgr;
         IGUIEnvironment* guienv;
+        std::vector<Player *> playerList;
     protected:
     private:
 };
