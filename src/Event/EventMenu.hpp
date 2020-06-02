@@ -21,6 +21,7 @@ class EventMenu : public IEventReceiver {
         EventMenu();
         virtual bool OnEvent(const SEvent& event);
         bool isButtonClicked(irr::s32 id);
+        void clear();
         ~EventMenu();
         bool isActive;
     protected:

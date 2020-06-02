@@ -14,16 +14,44 @@ Engine::Engine(int height, int width, std::wstring title)
     config.driver = config.device->getVideoDriver();
     config.event = new EventMenu();
     config.device->setEventReceiver(config.event);
+    _scene = new Menu(config);
 }
 
+void Engine::update() 
+{
+    if (_scene->update().first && _scene->update().second != NONE) {
+        config.event->clear();
+        selectScene(config, _scene->update().second);
+    }
+}
+
+void Engine::selectScene(Config &conf, SceneType sceneId)
+{
+    delete _scene;
+    switch (sceneId)
+    {
+    case MAIN_MENU/* constant-expression */:
+        _scene = new Menu(conf);
+        break;
+    case MAIN_SELECTION:
+        break;
+    default:
+        break;
+    }
+}
+
+void Engine::display()
+{
+    config.driver->beginScene(true, true, SColor(255, 100, 101, 140));
+    _scene->display();
+    config.driver->endScene();
+}
 
 void Engine::run()
 {
-    Menu *menu = new Menu(config);
     while(config.device->run()) {
-        config.driver->beginScene(true, true, SColor(255, 100, 101, 140));
-        menu->display();
-        config.driver->endScene();
+        display();
+        update();
     }
 }
 

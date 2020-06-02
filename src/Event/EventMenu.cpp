@@ -26,6 +26,12 @@ bool EventMenu::OnEvent(const SEvent& event)
     return false;
 }
 
+void EventMenu::clear()
+{
+    guiButton.first = 0;
+    guiButton.second = (EGUI_EVENT_TYPE) 0;
+}
+
 bool EventMenu::isButtonClicked(irr::s32 buttonId)
 {
     if (guiButton.first == buttonId) {

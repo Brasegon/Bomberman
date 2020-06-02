@@ -21,11 +21,15 @@ class Engine {
     public:
         Engine(int height, int width, std::wstring title);
         void run();
+        void display();
+        void update();
+        void selectScene(Config &conf, SceneType sceneId);
         ~Engine();
 
     protected:
     private:
         Config config;
+        AScene *_scene;
 };
 
 #endif /* !ENGINE_HPP_ */

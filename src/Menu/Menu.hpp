@@ -11,20 +11,19 @@
 #include "../Engine/Config.hpp"
 #include "../Event/EventMenu.hpp"
 #include "../Logger/Logger.hpp"
-#include "IScene.hpp"
-class Menu : public IScene {
+#include "AScene.hpp"
+class Menu : public AScene {
     public:
         Menu(Config &conf);
-        void display();
-        void update();
-        void init(Config &conf);
-        const Config &getUpdateConfig() const;
-        ~Menu();
+        void display() override;
+        ChangeScene update() override;
+        void init(Config &conf) override;
+        const Config &getUpdateConfig() const override;
+        ~Menu() override;
 
     protected:
     private:
-        void checkClick();
-        Config config;
+        ChangeScene checkClick(ChangeScene change);
         bool isActive;
         Logger log;
 };

@@ -7,7 +7,7 @@
 
 #include "Menu.hpp"
 
-Menu::Menu(Config &conf)
+Menu::Menu(Config &conf) : AScene(conf)
 {
     isActive = true;
     config = conf;
@@ -35,21 +35,30 @@ const Config &Menu::getUpdateConfig() const
     return (config);
 }
 
-void Menu::checkClick()
+ChangeScene Menu::checkClick(ChangeScene change)
 {
-    // if (config.event->isButtonClicked())
+    if (config.event->isButtonClicked(1)) {
+        return {true, MAIN_SELECTION};
+    }
+    return {false, NONE};
 }
-void Menu::update() {
 
+ChangeScene Menu::update()
+{
+    ChangeScene change;
+    change = checkClick(change);
+    return change;
 }
 
 void Menu::display()
 {
-    // std::cout << config.playerList[0]->getPlayerName() << std::endl;
     config.smgr->drawAll();
     config.guienv->drawAll();
 }
 
 Menu::~Menu()
 {
+    log.printInfo("Close Main Menu");
+    config.smgr->clear();
+    config.guienv->clear();
 }

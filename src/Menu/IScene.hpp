@@ -15,9 +15,10 @@
 class IScene {
     public:
         virtual void display() = 0;
-        virtual void update() = 0;
+        virtual ChangeScene update() = 0;
         virtual void init(Config &conf) = 0;
         virtual const Config &getUpdateConfig() const = 0;
+        virtual ~IScene() = default;
     protected:
     private:
 };

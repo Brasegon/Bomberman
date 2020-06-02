@@ -14,4 +14,11 @@
 #include <ctime>
 #include "../include/irrlicht/irrlicht.h"
 
+enum SceneType {
+    NONE = -1,
+    MAIN_MENU,
+    MAIN_SELECTION,
+};
+
+using ChangeScene = std::pair<bool, SceneType>;
 #endif /* !MY_HPP_ */
