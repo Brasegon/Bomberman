@@ -27,6 +27,7 @@ class MenuSelection : public AScene {
         bool isActive;
         Logger log;
         ITexture *background;
+        std::vector<gui::IGUIEditBox *> boxName;
 };
 
 #endif /* !MENUSELECTION_HPP_ */

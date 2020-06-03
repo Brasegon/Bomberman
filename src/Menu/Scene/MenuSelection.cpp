@@ -14,8 +14,10 @@ MenuSelection::MenuSelection(Config &conf) : AScene(conf)
     config.guienv = config.device->getGUIEnvironment();
     config.smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
 
-    config.guienv->addButton(rect<s32>(10, 240, 110, 240 + 32), 0, 1,
-			L"TEST", NULL);
+    boxName.push_back(config.guienv->addEditBox(L"Player 1", irr::core::rect<irr::s32>(10, 10, 60, 30)));
+    boxName.push_back(config.guienv->addEditBox(L"Player 2", irr::core::rect<irr::s32>(60 + 10, 10, 50 * 2 + 20, 30)));
+    boxName.push_back(config.guienv->addEditBox(L"Player 3", irr::core::rect<irr::s32>(10, 30 + 10, 60, 30 * 2)));
+    boxName.push_back(config.guienv->addEditBox(L"Player 4", irr::core::rect<irr::s32>(60 + 10, 30 + 10, 50 * 2 + 20, 30 * 2)));
     log.printInfo("Loading Main Selection");
 }
 
