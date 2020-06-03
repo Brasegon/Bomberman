@@ -19,6 +19,7 @@ bool EventMenu::OnEvent(const SEvent& event)
             case EGET_BUTTON_CLICKED:
                 guiButton.first = id;
                 guiButton.second = event.GUIEvent.EventType;
+                return true;
             default:
 				break;
         }

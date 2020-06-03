@@ -26,15 +26,22 @@ void Engine::update()
 
 void Engine::selectScene(Config &conf, SceneType sceneId)
 {
+
     delete _scene;
     switch (sceneId)
     {
     case MAIN_MENU/* constant-expression */:
         _scene = new Menu(conf);
+        oldScene = sceneId;
         break;
     case MAIN_SELECTION:
         _scene = new MenuSelection(conf);
+        oldScene = sceneId;
         break;
+    case GAME:
+        if (oldScene == MAIN_SELECTION) {
+            
+        }
     default:
         break;
     }

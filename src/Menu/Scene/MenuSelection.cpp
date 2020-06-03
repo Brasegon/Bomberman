@@ -18,6 +18,11 @@ MenuSelection::MenuSelection(Config &conf) : AScene(conf)
     boxName.push_back(config.guienv->addEditBox(L"Player 2", irr::core::rect<irr::s32>(60 + 10, 10, 50 * 2 + 20, 30)));
     boxName.push_back(config.guienv->addEditBox(L"Player 3", irr::core::rect<irr::s32>(10, 30 + 10, 60, 30 * 2)));
     boxName.push_back(config.guienv->addEditBox(L"Player 4", irr::core::rect<irr::s32>(60 + 10, 30 + 10, 50 * 2 + 20, 30 * 2)));
+    boxName[0]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
+    boxName[1]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
+    boxName[2]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
+    boxName[3]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
+    launchButton = config.guienv->addButton(irr::core::rect<irr::s32>(10 , 30 * 2, 60, 30 * 3), 0, 1, L"Launch Game", NULL);
     log.printInfo("Loading Main Selection");
 }
 
@@ -33,6 +38,15 @@ const Config &MenuSelection::getUpdateConfig() const
 
 ChangeScene MenuSelection::checkClick(ChangeScene change)
 {
+    std::string playerName;
+
+    if (config.event->isButtonClicked(1)) {
+        for (int i = 0; i < 4 && config.playerList.size() < 4; i += 1) {
+            playerName = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes((boxName[i]->getText()));
+            config.playerList.push_back(new Player(playerName, true));
+        }
+        return {true, MAIN_MENU};
+    }
     return {false, NONE};
 }
 
@@ -51,4 +65,8 @@ void MenuSelection::display()
 
 MenuSelection::~MenuSelection()
 {
+    log.printInfo("Close Main Selection");
+    config.smgr->clear();
+    config.guienv->clear();
+    config.driver->clearZBuffer();
 }

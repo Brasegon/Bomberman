@@ -13,11 +13,14 @@
 #include <string>
 #include <ctime>
 #include "../include/irrlicht/irrlicht.h"
+#include <codecvt>
+#include <locale>
 
 enum SceneType {
     NONE = -1,
     MAIN_MENU,
     MAIN_SELECTION,
+    GAME,
 };
 
 using ChangeScene = std::pair<bool, SceneType>;

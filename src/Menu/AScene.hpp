@@ -9,7 +9,6 @@
 #include "../Engine/Config.hpp"
 #include "../Event/EventMenu.hpp"
 #include "../Logger/Logger.hpp"
-
 #ifndef ASCENE_HPP_
 #define ASCENE_HPP_
 

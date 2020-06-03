@@ -11,6 +11,7 @@
 #include "../../Engine/Config.hpp"
 #include "../../Event/EventMenu.hpp"
 #include "../../Logger/Logger.hpp"
+#include "../../Player/Player.hpp"
 #include "../AScene.hpp"
 
 class MenuSelection : public AScene {
@@ -28,6 +29,7 @@ class MenuSelection : public AScene {
         Logger log;
         ITexture *background;
         std::vector<gui::IGUIEditBox *> boxName;
+        irr::gui::IGUIButton *launchButton;
 };
 
 #endif /* !MENUSELECTION_HPP_ */

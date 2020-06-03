@@ -31,6 +31,7 @@ class Engine {
     private:
         Config config;
         AScene *_scene;
+        SceneType oldScene;
 };
 
 #endif /* !ENGINE_HPP_ */
