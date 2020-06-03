@@ -20,7 +20,6 @@ Engine::Engine(int height, int width, std::wstring title)
 void Engine::update() 
 {
     if (_scene->update().first && _scene->update().second != NONE) {
-        config.event->clear();
         selectScene(config, _scene->update().second);
     }
 }
@@ -34,6 +33,7 @@ void Engine::selectScene(Config &conf, SceneType sceneId)
         _scene = new Menu(conf);
         break;
     case MAIN_SELECTION:
+        _scene = new MenuSelection(conf);
         break;
     default:
         break;

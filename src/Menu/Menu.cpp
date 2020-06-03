@@ -14,6 +14,7 @@ Menu::Menu(Config &conf) : AScene(conf)
     config.smgr = config.device->getSceneManager();
     config.guienv = config.device->getGUIEnvironment();
     config.smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
+    background = config.driver->getTexture("./assets/textures/background.jpg");
     config.guienv->addButton(rect<s32>(10, 240, 110, 240 + 32), 0, 1,
 			L"PLAY", NULL);
     config.guienv->addButton(rect<s32>(10, 240 + 32, 110, 240 + 32 * 2), 0, 2,
@@ -52,6 +53,9 @@ ChangeScene Menu::update()
 
 void Menu::display()
 {
+    config.driver->draw2DImage(background, core::position2d<s32>(0,0),
+				core::rect<s32>(0,0,1280,720), 0,
+				video::SColor(255,255,255,255), true);
     config.smgr->drawAll();
     config.guienv->drawAll();
 }
@@ -61,4 +65,5 @@ Menu::~Menu()
     log.printInfo("Close Main Menu");
     config.smgr->clear();
     config.guienv->clear();
+    config.driver->clearZBuffer();
 }

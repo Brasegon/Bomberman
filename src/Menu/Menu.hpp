@@ -26,6 +26,7 @@ class Menu : public AScene {
         ChangeScene checkClick(ChangeScene change);
         bool isActive;
         Logger log;
+        ITexture *background;
 };
 
 #endif /* !MENU_HPP_ */

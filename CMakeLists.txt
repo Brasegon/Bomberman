@@ -57,6 +57,8 @@ add_executable(bomberman
                 src/Engine/Config.hpp
                 src/Menu/Menu.hpp
                 src/Menu/Menu.cpp
+                src/Menu/Scene/MenuSelection.cpp
+                src/Menu/Scene/MenuSelection.hpp
                 src/Menu/IScene.hpp
                 src/Menu/AScene.hpp
                 src/my.hpp

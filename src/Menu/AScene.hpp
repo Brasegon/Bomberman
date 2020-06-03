@@ -15,7 +15,9 @@
 
 class AScene : public IScene {
     public:
-        AScene(Config &conf) : config(conf) {}
+        AScene(Config &conf) : config(conf) {
+            config.event->clear();
+        }
         ~AScene() override = default;
 
     protected:
