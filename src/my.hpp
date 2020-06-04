@@ -13,6 +13,8 @@
 #include <string>
 #include <ctime>
 #include "../include/irrlicht/irrlicht.h"
+#include "../include/SFML/Audio.hpp"
+#include "../include/SFML/System.hpp"
 #include <codecvt>
 #include <locale>
 

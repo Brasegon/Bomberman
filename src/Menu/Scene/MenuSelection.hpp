@@ -31,6 +31,7 @@ class MenuSelection : public AScene {
     protected:
     private:
         ChangeScene checkClick(ChangeScene change);
+        void initGui();
         bool isActive;
         Logger log;
         ITexture *background;

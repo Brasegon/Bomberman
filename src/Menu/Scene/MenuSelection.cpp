@@ -14,19 +14,31 @@ MenuSelection::MenuSelection(Config &conf) : AScene(conf)
     config.guienv = config.device->getGUIEnvironment();
     config.smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
 
-    boxName.push_back(config.guienv->addEditBox(L"Player 1", irr::core::rect<irr::s32>(10, 10, 60, 30)));
+    initGui();
+
+    log.printInfo("Loading Main Selection");
+}
+
+void MenuSelection::initGui()
+{
+    boxName.push_back(addEditBox(10, 10, 50, 20, L"Player1"));
     boxButton.push_back(addButton(70, 10, 50, 20, L"Player", GUI_CHOOSE_PLAYER_ONE));
-    boxName.push_back(config.guienv->addEditBox(L"Player 2", irr::core::rect<irr::s32>(10, 40, 60, 30 + 30)));
-    boxButton.push_back(addButton(70, 40, 50, 20, L"Player", GUI_CHOOSE_PLAYER_TWO));
-    // boxName.push_back(config.guienv->addEditBox(L"Player 2", irr::core::rect<irr::s32>(60 + 10, 10, 50 * 2 + 20, 30)));
-    // boxName.push_back(config.guienv->addEditBox(L"Player 3", irr::core::rect<irr::s32>(10, 30 + 10, 60, 30 * 2)));
-    // boxName.push_back(config.guienv->addEditBox(L"Player 4", irr::core::rect<irr::s32>(60 + 10, 30 + 10, 50 * 2 + 20, 30 * 2)));
+
+    boxName.push_back(addEditBox(10, 40, 50, 20, L"Player2"));
+    boxButton.push_back(addButton(70, 40, 50, 20, L"IA", GUI_CHOOSE_PLAYER_TWO));
+
+    boxName.push_back(addEditBox(10, 70, 50, 20, L"Player3"));
+    boxButton.push_back(addButton(70, 70, 50, 20, L"IA", GUI_CHOOSE_PLAYER_THREE));
+
+    boxName.push_back(addEditBox(10, 100, 50, 20, L"Player4"));
+    boxButton.push_back(addButton(70, 100, 50, 20, L"IA", GUI_CHOOSE_PLAYER_FOUR));
+
     boxName[0]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
     boxName[1]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
-    // boxName[2]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
-    // boxName[3]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
+    boxName[2]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
+    boxName[3]->setTextAlignment(EGUIA_CENTER, EGUIA_CENTER);
+
     launchButton = addButton(10 , 600, 60, 30, L"Launch Game", 1);
-    log.printInfo("Loading Main Selection");
 }
 
 void MenuSelection::init(Config &conf)
@@ -53,16 +65,19 @@ ChangeScene MenuSelection::checkClick(ChangeScene change)
         }
         return {true, MAIN_MENU};
     }
-    for (uint64_t i = 2, z = 0 ; z < boxButton.size(); i += 1, z += 1)
-    if (config.event->isButtonClicked(i)) {
-        std::string playerBot = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes((boxButton[z]->getText()));
-        if (playerBot == "Player") {
-            boxButton[z]->setText(L"IA");
-        } else if (playerBot == "IA") {
-            boxButton[z]->setText(L"Player");
+
+    for (uint64_t i = 2, z = 0 ; z < boxButton.size(); i += 1, z += 1) {
+        if (config.event->isButtonClicked(i)) {
+            std::string playerBot = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes((boxButton[z]->getText()));
+            if (playerBot == "Player") {
+                boxButton[z]->setText(L"IA");
+            } else if (playerBot == "IA") {
+                boxButton[z]->setText(L"Player");
+            }
+            config.event->clear();
         }
-        config.event->clear();
     }
+    
     return {false, NONE};
 }
 

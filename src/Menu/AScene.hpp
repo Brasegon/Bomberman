@@ -24,6 +24,11 @@ class AScene : public IScene {
             
             return button;
         }
+        IGUIEditBox *addEditBox(irr::s32 x, irr::s32 y, irr::s32 lo, irr::s32 la, std::wstring title)
+        {
+            IGUIEditBox *button = config.guienv->addEditBox(title.c_str(), irr::core::rect<irr::s32>(x, y, x + lo, y + la));
+            return button;
+        }
         ~AScene() override = default;
 
     protected:
