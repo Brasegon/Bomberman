@@ -16,6 +16,12 @@
 
 class MenuSelection : public AScene {
     public:
+        enum {
+            GUI_CHOOSE_PLAYER_ONE = 2,
+            GUI_CHOOSE_PLAYER_TWO,
+            GUI_CHOOSE_PLAYER_THREE,
+            GUI_CHOOSE_PLAYER_FOUR,
+        };
         MenuSelection(Config &conf);
         void display() override;
         ChangeScene update() override;
@@ -29,6 +35,7 @@ class MenuSelection : public AScene {
         Logger log;
         ITexture *background;
         std::vector<gui::IGUIEditBox *> boxName;
+        std::vector<gui::IGUIButton *> boxButton;
         irr::gui::IGUIButton *launchButton;
 };
 

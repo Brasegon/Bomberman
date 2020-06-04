@@ -15,18 +15,16 @@ Menu::Menu(Config &conf) : AScene(conf)
     config.guienv = config.device->getGUIEnvironment();
     config.smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
     background = config.driver->getTexture("./assets/textures/background.jpg");
-    config.guienv->addButton(rect<s32>(10, 240, 110, 240 + 32), 0, 1,
-			L"PLAY", NULL);
-    config.guienv->addButton(rect<s32>(10, 240 + 32, 110, 240 + 32 * 2), 0, 2,
-			L"QUIT", NULL);
+    addButton(1280 / 2 - 50, 240, 100, 32, L"PLAY", 1);
+    addButton(1280 / 2 - 50, 240 + 40, 100, 32, L"QUIT", 2);
     log.printInfo("Loading Main Menu");
 }
 
 void Menu::init(Config &conf) {
     config = conf;
-    config.guienv->addButton(rect<s32>(10, 240, 110, 240 + 32), 0, 1,
+    config.guienv->addButton(rect<s32>(1280 / 2 - 105, 240, 110, 240 + 32), 0, 1,
 			L"PLAY", NULL);
-    config.guienv->addButton(rect<s32>(10, 240 + 32, 110, 240 + 32 * 2), 0, 2,
+    config.guienv->addButton(rect<s32>(1280 / 2 - 105, 240 + 32, 110, 240 + 32 * 2), 0, 2,
 			L"QUIT", NULL);
     log.printInfo("Loading Main Menu");
 }
@@ -40,6 +38,9 @@ ChangeScene Menu::checkClick(ChangeScene change)
 {
     if (config.event->isButtonClicked(1)) {
         return {true, MAIN_SELECTION};
+    }
+    if (config.event->isButtonClicked(2)) {
+        std::exit(0);
     }
     return {false, NONE};
 }
