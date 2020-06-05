@@ -17,6 +17,8 @@
 #include "../include/SFML/System.hpp"
 #include <codecvt>
 #include <locale>
+#include <chrono>
+#include <thread>
 
 enum SceneType {
     NONE = -1,

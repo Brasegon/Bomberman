@@ -25,7 +25,7 @@ class MenuSelection : public AScene {
         MenuSelection(Config &conf);
         void display() override;
         ChangeScene update() override;
-        void init(Config &conf) override;
+        void init(Config &conf);
         const Config &getUpdateConfig() const override;
         ~MenuSelection() override;
     protected:

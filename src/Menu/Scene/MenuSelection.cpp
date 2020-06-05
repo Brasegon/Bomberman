@@ -13,12 +13,6 @@ MenuSelection::MenuSelection(Config &conf) : AScene(conf)
     config.smgr = config.device->getSceneManager();
     config.guienv = config.device->getGUIEnvironment();
     config.smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
-    sf::Music music;
-    if (!music.openFromFile("assets/music.ogg")) {
-        exit(84);
-    }
-    music.setVolume(100);
-    music.play();
     initGui();
 
     log.printInfo("Loading Main Selection");

@@ -17,7 +17,7 @@ class Menu : public AScene {
         Menu(Config &conf);
         void display() override;
         ChangeScene update() override;
-        void init(Config &conf) override;
+        void init(Config &conf);
         const Config &getUpdateConfig() const override;
         ~Menu() override;
 
@@ -26,7 +26,9 @@ class Menu : public AScene {
         ChangeScene checkClick(ChangeScene change);
         bool isActive;
         Logger log;
+        sf::Music *music;
         ITexture *background;
+        video::ITexture* logo;
 };
 
 #endif /* !MENU_HPP_ */

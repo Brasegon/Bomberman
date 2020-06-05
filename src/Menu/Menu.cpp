@@ -15,8 +15,19 @@ Menu::Menu(Config &conf) : AScene(conf)
     config.guienv = config.device->getGUIEnvironment();
     config.smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
     background = config.driver->getTexture("./assets/textures/background.jpg");
-    addButton(1280 / 2 - 50, 240, 100, 32, L"PLAY", 1);
-    addButton(1280 / 2 - 50, 240 + 40, 100, 32, L"QUIT", 2);
+
+    music = new sf::Music();
+    if (!music->openFromFile("assets/music.ogg")) {
+        exit(84);
+    }
+    music->setVolume(50);
+    music->play();
+
+    logo = config.driver->getTexture("./assets/textures/logo.png");
+
+    addButton(1280 / 2 - 50, 350, 100, 32, L"PLAY", 1);
+    addButton(1280 / 2 - 50, 350 + 40, 100, 32, L"QUIT", 2);
+    
     log.printInfo("Loading Main Menu");
 }
 
@@ -56,6 +67,9 @@ void Menu::display()
 {
     config.driver->draw2DImage(background, core::position2d<s32>(0,0),
 				core::rect<s32>(0,0,1280,720), 0,
+				video::SColor(255,255,255,255), true);
+    config.driver->draw2DImage(logo, core::position2d<s32>(1280 / 2 - 517 / 2, 10),
+				core::rect<s32>(0,0, 1033,620), 0,
 				video::SColor(255,255,255,255), true);
     config.smgr->drawAll();
     config.guienv->drawAll();

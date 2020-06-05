@@ -14,7 +14,7 @@ Engine::Engine(int height, int width, std::wstring title)
     config.driver = config.device->getVideoDriver();
     config.event = new EventMenu();
     config.device->setEventReceiver(config.event);
-    _scene = new Menu(config);
+    _scene = new SceneIntro(config);
 }
 
 void Engine::update() 

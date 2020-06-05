@@ -11,6 +11,7 @@
 #include "../Logger/Logger.hpp"
 #include "Config.hpp"
 #include "../Menu/Menu.hpp"
+#include "../Menu/Scene/SceneIntro.hpp"
 #include "../Menu/Scene/MenuSelection.hpp"
 using namespace irr;
 using namespace core;
