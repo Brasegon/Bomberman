@@ -9,6 +9,7 @@
 #define MY_HPP_
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include <ctime>
@@ -19,6 +20,7 @@
 #include <locale>
 #include <chrono>
 #include <thread>
+#include <window>
 
 enum SceneType {
     NONE = -1,
