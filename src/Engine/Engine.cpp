@@ -26,7 +26,7 @@ void Engine::update()
 
 void Engine::selectScene(Config &conf, SceneType sceneId)
 {
-
+    conf = _scene->getUpdateConfig();
     delete _scene;
     switch (sceneId)
     {

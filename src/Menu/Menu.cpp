@@ -16,12 +16,12 @@ Menu::Menu(Config &conf) : AScene(conf)
     config.smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
     background = config.driver->getTexture("./assets/textures/background.jpg");
 
-    music = new sf::Music();
-    if (!music->openFromFile("assets/music.ogg")) {
+    config.setting.music = new sf::Music();
+    if (!config.setting.music->openFromFile("assets/music.ogg")) {
         exit(84);
     }
-    music->setVolume(50);
-    music->play();
+    config.setting.music->setVolume(50);
+    config.setting.music->play();
 
     logo = config.driver->getTexture("./assets/textures/logo.png");
 

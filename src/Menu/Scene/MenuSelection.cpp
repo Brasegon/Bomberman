@@ -13,6 +13,7 @@ MenuSelection::MenuSelection(Config &conf) : AScene(conf)
     config.smgr = config.device->getSceneManager();
     config.guienv = config.device->getGUIEnvironment();
     config.smgr->addCameraSceneNode(0, vector3df(0, 30, -40), vector3df(0, 5, 0));
+    background = config.driver->getTexture("./assets/textures/backgroundSelection.jpg");
     initGui();
 
     log.printInfo("Loading Main Selection");
@@ -89,6 +90,9 @@ ChangeScene MenuSelection::update()
 
 void MenuSelection::display()
 {
+    config.driver->draw2DImage(background, core::position2d<s32>(0,0),
+				core::rect<s32>(0,0,1280,720), 0,
+				video::SColor(255,255,255,255), true);
     config.smgr->drawAll();
     config.guienv->drawAll();
 }
@@ -96,6 +100,7 @@ void MenuSelection::display()
 MenuSelection::~MenuSelection()
 {
     log.printInfo("Close Main Selection");
+    config.setting.music->stop();
     config.smgr->clear();
     config.guienv->clear();
     config.driver->clearZBuffer();

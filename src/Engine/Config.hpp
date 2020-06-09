@@ -18,6 +18,13 @@ using namespace video;
 using namespace io;
 using namespace gui;
 
+class Setting {
+    public:
+        Setting() {}
+        ~Setting() {}
+        sf::Music *music;
+};
+
 class Config {
     public:
         Config() {}
@@ -29,6 +36,7 @@ class Config {
         IGUIEnvironment* guienv;
         std::vector<Player *> playerList;
         EventMenu *event;
+        Setting setting;
     protected:
     private:
 };
