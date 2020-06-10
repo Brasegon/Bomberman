@@ -7,7 +7,7 @@
 #include "IScene.hpp"
 #include "../my.hpp"
 #include "../Engine/Config.hpp"
-#include "../Event/EventMenu.hpp"
+#include "../Event/Event.hpp"
 #include "../Logger/Logger.hpp"
 #ifndef ASCENE_HPP_
 #define ASCENE_HPP_

@@ -44,8 +44,8 @@ endif (WIN32)
 
 # Create executable
 add_executable(bomberman
-                src/Event/EventMenu.cpp
-                src/Event/EventMenu.hpp
+                src/Event/Event.cpp
+                src/Event/Event.hpp
                 src/Core/Core.cpp
                 src/Core/Core.hpp
                 src/Player/Player.cpp

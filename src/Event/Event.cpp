@@ -7,11 +7,13 @@
 
 #include "../Menu/Menu.hpp"
 
-EventMenu::EventMenu()
+Event::Event()
 {
+    for (u32 i=0; i<KEY_KEY_CODES_COUNT; ++i)
+    KeyIsDown[i] = false;
 }
 
-bool EventMenu::OnEvent(const SEvent& event)
+bool Event::OnEvent(const SEvent& event)
 {
     if (event.EventType == EET_GUI_EVENT) {
         s32 id = event.GUIEvent.Caller->getID();
@@ -24,16 +26,20 @@ bool EventMenu::OnEvent(const SEvent& event)
 				break;
         }
     }
+    // Remember whether each key is down or up
+    if (event.EventType == irr::EET_KEY_INPUT_EVENT)
+        KeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown;
+
     return false;
 }
 
-void EventMenu::clear()
+void Event::clear()
 {
     guiButton.first = 0;
     guiButton.second = (EGUI_EVENT_TYPE) 0;
 }
 
-bool EventMenu::isButtonClicked(irr::s32 buttonId)
+bool Event::isButtonClicked(irr::s32 buttonId)
 {
     if (guiButton.first == buttonId) {
         return true;
@@ -41,6 +47,11 @@ bool EventMenu::isButtonClicked(irr::s32 buttonId)
     return false;
 }
 
-EventMenu::~EventMenu()
+bool Event::IsKeyDown(EKEY_CODE keyCode) const
+{
+    return KeyIsDown[keyCode];
+}
+
+Event::~Event()
 {
 }

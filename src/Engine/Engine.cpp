@@ -12,7 +12,7 @@ Engine::Engine(int height, int width, std::wstring title)
     config.device = createDevice(video::EDT_SOFTWARE, dimension2d<u32>(height, width), 16, false, false, false, 0);
     config.device->setWindowCaption(title.c_str());
     config.driver = config.device->getVideoDriver();
-    config.event = new EventMenu();
+    config.event = new Event();
     config.device->setEventReceiver(config.event);
     _scene = new SceneIntro(config);
 }

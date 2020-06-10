@@ -61,7 +61,7 @@ ChangeScene MenuSelection::checkClick(ChangeScene change)
             playerName = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes((boxName[i]->getText()));
             playerBot = std::wstring_convert<std::codecvt_utf8<wchar_t>>().to_bytes((boxButton[i]->getText()));
             bool isBot = (playerBot == "Player") ? false : true;
-            config.playerList.push_back(new Player(playerName, isBot));
+            config.playerList.push_back(new Player(playerName, isBot, i));
         }
         return {true, MAIN_MENU};
     }
