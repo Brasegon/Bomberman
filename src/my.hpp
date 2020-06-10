@@ -20,6 +20,7 @@
 #include <locale>
 #include <chrono>
 #include <thread>
+#include <sstream>
 // #include <window>
 
 enum SceneType {

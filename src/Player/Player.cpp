@@ -41,17 +41,17 @@ keybind_t Player::getKeys() const
     return keys;
 }
 
-void Player::initCoord(std::vector<std::string> map)
+void Player::initCoord(const std::vector<std::string> &map)
 {
     size_t Pcount = 0;
     for (size_t i = 0; i < map.size(); i++) {
         for (size_t j = 0; j < map[i].size(); j++) {
             if (map[i][j] == 'P') {
-                Pcount++;
-                if (Pcount == playerNb) {
+                if (Pcount >= playerNb) {
                     pos = {i, j};
                     return;
                 }
+                Pcount++;
             }
         }
     }

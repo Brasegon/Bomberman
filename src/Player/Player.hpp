@@ -39,7 +39,7 @@ class Player {
         void setPlayerName(std::string name);
         bool getIsBot() const;
         keybind_t getKeys() const;
-        void initCoord(std::vector<std::string> map);
+        void initCoord(const std::vector<std::string> &map);
         const coord2d_t &getCoord() const;
         void setCoord(coord2d_t pos);
         
