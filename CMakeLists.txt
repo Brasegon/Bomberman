@@ -63,6 +63,8 @@ add_executable(bomberman
                 src/Menu/Scene/SceneIntro.cpp
                 src/Menu/IScene.hpp
                 src/Menu/AScene.hpp
+                src/Game/GameScene.cpp
+                src/Game/GameScene.hpp
                 src/my.hpp
                 src/main.cpp)
 

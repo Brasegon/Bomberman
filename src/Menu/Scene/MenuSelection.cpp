@@ -63,7 +63,7 @@ ChangeScene MenuSelection::checkClick(ChangeScene change)
             bool isBot = (playerBot == "Player") ? false : true;
             config.playerList.push_back(new Player(playerName, isBot, i));
         }
-        return {true, MAIN_MENU};
+        return {true, GAME};
     }
 
     for (uint64_t i = 2, z = 0 ; z < boxButton.size(); i += 1, z += 1) {

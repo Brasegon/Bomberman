@@ -39,9 +39,8 @@ void Engine::selectScene(Config &conf, SceneType sceneId)
         oldScene = sceneId;
         break;
     case GAME:
-        if (oldScene == MAIN_SELECTION) {
-            
-        }
+        _scene = new GameScene(conf);
+        break;
     default:
         break;
     }
