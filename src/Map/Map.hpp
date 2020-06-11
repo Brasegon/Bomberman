@@ -9,15 +9,19 @@
 #define MAP_HPP_
 
 #include "../my.hpp"
+#include "../Game/GameScene.hpp"
 
 class Map
 {
 public:
 	Map();
 	~Map();
-	void OpenMap(std::string path);
+	void OpenMap(const std::string &path);
+	void LoadMap(scene::ISceneNode* n, std::vector<irr::scene::ISceneNode*> nodeList, Config& conf);
 private:
 protected:
+	bool noDestruc = false;
+	bool wall = false;
 	std::vector<std::string> map;
 
 	enum MapObject {
