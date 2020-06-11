@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <ctime>
+#include <exception>
 #include "../include/irrlicht/irrlicht.h"
 #include "../include/SFML/Audio.hpp"
 #include "../include/SFML/System.hpp"
@@ -21,7 +22,6 @@
 #include <chrono>
 #include <thread>
 #include <sstream>
-// #include <window>
 
 enum SceneType {
     NONE = -1,
