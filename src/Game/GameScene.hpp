@@ -10,6 +10,7 @@
 
 #include "../Menu/AScene.hpp"
 #include "../Event/Event.hpp"
+#include "Bomb.hpp"
 
 class GameScene : public AScene {
     public:
@@ -27,11 +28,13 @@ class GameScene : public AScene {
         void playerLeft(Player *player);
         void playerRight(Player *player);
         void playerDrop(Player *player);
+        void explosion(Bomb bomb);
         bool isWalkable(coord2d_t coord);
 
     private:
         std::vector<std::string> map;
         scene::ISceneNode *node;
+        std::vector<Bomb> bombList;
 };
 
 #endif /* !GAMESCENE_HPP_ */

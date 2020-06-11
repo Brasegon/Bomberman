@@ -15,7 +15,7 @@ static keybind_t keybinds[4] = {
 };
 
 Player::Player(const std::string &name, bool bot, size_t nb)
-:playerName(name), isBot(bot), playerNb(nb), keys(keybinds[nb]), pos({0,0})
+:playerName(name), isBot(bot), playerNb(nb), keys(keybinds[nb]), pos({0,0}), buff({0, 0, 250, false})
 {
     std::string iaOrNot = (isBot) ? "IA" : "Player";
     log.printInfo("Initialisation du joueur " + playerName + "(" + iaOrNot + ")");
@@ -69,14 +69,48 @@ void Player::setCoord(coord2d_t _pos) {
 
 bool Player::MoveClock() {
     end = std::chrono::high_resolution_clock().now();
-    if (end-start >= std::chrono::milliseconds(250)) {
+    if (end-start >= std::chrono::milliseconds(buff.SpeedUp)) {
         start = std::chrono::high_resolution_clock().now();
         return true;
     }
     return false;
 }
 
+playerBuff_t Player::getBuff()
+{
+    return buff;
+}
+
+void Player::addBuffBombUp()
+{
+    if (buff.BombUp <= 5)
+        buff.BombUp++;
+}
+
+void Player::addBuffFireUp()
+{
+    if (buff.FireUp <= 3)
+        buff.FireUp++;
+}
+
+void Player::addBuffSpeedUp()
+{
+    if (buff.SpeedUp >= 150) {
+        buff.SpeedUp -= 25;
+    }
+}
+
+void Player::addBuffWallPass()
+{
+
+}
 
 Player::~Player()
 {
+}
+
+bool operator==(coord2d_t coord1, coord2d_t coord2) {
+    if (coord1.x == coord2.x && coord1.y == coord2.y)
+        return true;
+    return false;
 }

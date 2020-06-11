@@ -24,6 +24,13 @@ typedef struct coord2d_s {
     size_t x;
 } coord2d_t;
 
+typedef struct playerBuff_s {
+    unsigned int BombUp;
+    unsigned int FireUp;
+    unsigned int SpeedUp;
+    bool WallPass;
+} playerBuff_t;
+
 typedef struct keybind_s {
     irr::EKEY_CODE up;
     irr::EKEY_CODE down;
@@ -44,6 +51,11 @@ class Player {
         void setCoord(coord2d_t pos);
         irr::scene::ISceneNode *node;
         bool MoveClock();
+        playerBuff_t getBuff();
+        void addBuffBombUp();
+        void addBuffFireUp();
+        void addBuffSpeedUp();
+        void addBuffWallPass();
         ~Player();
 
     protected:
@@ -56,6 +68,8 @@ class Player {
         coord2d_t pos;
         std::chrono::time_point<std::chrono::high_resolution_clock> start;
         std::chrono::time_point<std::chrono::high_resolution_clock> end;
+        playerBuff_t buff;
 };
 
+bool operator==(coord2d_t coord1, coord2d_t coord2);
 #endif /* !PLAYER_HPP_ */

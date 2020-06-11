@@ -52,7 +52,7 @@ GameScene::GameScene(Config &conf) : AScene(conf)
     }
     for (size_t i = 0; i < config.playerList.size(); i++) {
         config.playerList[i]->initCoord(map);
-        config.log.printInfo(std::to_string(i)+" {"+std::to_string(config.playerList[i]->getCoord().y)+" , "+std::to_string(config.playerList[i]->getCoord().x)+"}");
+        config.log.printInfo("Player"+std::to_string(i)+" position{"+std::to_string(config.playerList[i]->getCoord().y)+" , "+std::to_string(config.playerList[i]->getCoord().x)+"}");
         config.playerList[i]->node = config.smgr->addSphereSceneNode();
         if (config.playerList[i]->node) {
             float y = 60 - ((float)(config.playerList[i]->getCoord().y) * 20);
@@ -62,7 +62,8 @@ GameScene::GameScene(Config &conf) : AScene(conf)
             config.playerList[i]->node->setMaterialFlag(video::EMF_LIGHTING, true);
         }
     }
-    config.smgr->addCameraSceneNodeFPS();
+
+    config.smgr->addCameraSceneNodeFPS(0, 3, 1, -1, 0, 0/*, true*/);
     // config.smgr->addCameraSceneNode(0, vector3df(0, 45, -300), vector3df(0, 0, 0));
 }
 
@@ -81,6 +82,12 @@ ChangeScene GameScene::update()
     if (config.event->IsKeyDown(KEY_ESCAPE)) {
         return {true, MAIN_MENU};
     }
+    if (config.event->IsKeyDown(KEY_SPACE)) {
+        config.log.printInfo("Reset Camera");
+        config.smgr->getActiveCamera()->setRotation(vector3df(0, 0, 0));
+        config.smgr->getActiveCamera()->setPosition(vector3df(0, 45, -300));
+    }
+
     updateGame();
     return {false, NONE};
 }
@@ -103,6 +110,12 @@ void GameScene::updateGame()
     for (size_t i = 0; i < config.playerList.size(); i++) {
         if (!config.playerList[i]->getIsBot()) {
             playerAction(config.playerList[i]);
+        }
+    }
+    for (size_t i = 0; i < bombList.size(); i++) {
+        if (bombList[i].isExploded()) {
+            explosion(bombList[i]);
+            bombList.erase(bombList.begin()+i);
         }
     }
 }
@@ -164,6 +177,11 @@ bool GameScene::isWalkable(coord2d_t coord)
     if (nonWalkable.find(map[coord.y][coord.x]) != std::string::npos) {
         return false;
     }
+    for (size_t i = 0; i < bombList.size(); i++) {
+        if (bombList[i].getCoord() == coord) {
+            return false;
+        }
+    }
     return true;
 }
 
@@ -209,5 +227,83 @@ void GameScene::playerRight(Player *player)
 
 void GameScene::playerDrop(Player *player)
 {
-    //drop bomb
+    size_t count = 0;
+    for (size_t i = 0; i < bombList.size(); i++) {
+        if (bombList[i].getPlayer() == player) {
+            count++;
+        }
+    }
+    if (count < 1+player->getBuff().BombUp)
+        bombList.push_back(Bomb(player));
+}
+
+void GameScene::explosion(Bomb bomb)
+{
+    std::string nonDestructible = "X#";
+
+    coord2d_t bombpos = bomb.getCoord();
+    //fire up
+    for (size_t i = 0; i < 3+bomb.getPlayer()->getBuff().FireUp && (int)(bombpos.y-i) >= 0; i++) {
+        for (size_t j = 0; j < config.playerList.size(); j++) {
+            if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y-i, bombpos.x}) {
+                //player die
+                config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb.getPlayer()->getPlayerName());
+                config.playerList.erase(config.playerList.begin()+j);
+            }
+        }
+        if (nonDestructible.find(map[bombpos.y-i][bombpos.x]) != std::string::npos) {
+            break;
+        }
+        else {
+            map[bombpos.y-i][bombpos.x] = ' ';
+        }
+    }
+    //fire down
+    for (size_t i = 0; i < 3+bomb.getPlayer()->getBuff().FireUp && bombpos.y+i < map.size(); i++) {
+        for (size_t j = 0; j < config.playerList.size(); j++) {
+            if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y+i, bombpos.x}) {
+                //player die
+                config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb.getPlayer()->getPlayerName());
+                config.playerList.erase(config.playerList.begin()+j);
+            }
+        }
+        if (nonDestructible.find(map[bombpos.y+i][bombpos.x]) != std::string::npos) {
+            break;
+        }
+        else {
+            map[bombpos.y+i][bombpos.x] = ' ';
+        }
+    }
+    //fire left
+    for (size_t i = 0; i < 3+bomb.getPlayer()->getBuff().FireUp && (int)(bombpos.x-i); i++) {
+        for (size_t j = 0; j < config.playerList.size(); j++) {
+            if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y, bombpos.x-i}) {
+                //player die
+                config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb.getPlayer()->getPlayerName());
+                config.playerList.erase(config.playerList.begin()+j);
+            }
+        }
+        if (nonDestructible.find(map[bombpos.y][bombpos.x-i]) != std::string::npos) {
+            break;
+        }
+        else {
+            map[bombpos.y][bombpos.x-i] = ' ';
+        }
+    }
+    //fire right
+    for (size_t i = 0; i < 3+bomb.getPlayer()->getBuff().FireUp && bombpos.x+i < map[bombpos.y].size(); i++) {
+        for (size_t j = 0; j < config.playerList.size(); j++) {
+            if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y, bombpos.x+i}) {
+                //player die
+                config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb.getPlayer()->getPlayerName());
+                config.playerList.erase(config.playerList.begin()+j);
+            }
+        }
+        if (nonDestructible.find(map[bombpos.y][bombpos.x+i]) != std::string::npos) {
+            break;
+        }
+        else {
+            map[bombpos.y][bombpos.x+i] = ' ';
+        }
+    }
 }
