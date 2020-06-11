@@ -19,6 +19,7 @@ Player::Player(const std::string &name, bool bot, size_t nb)
 {
     std::string iaOrNot = (isBot) ? "IA" : "Player";
     log.printInfo("Initialisation du joueur " + playerName + "(" + iaOrNot + ")");
+    start = std::chrono::high_resolution_clock().now();
 }
 
 const std::string &Player::getPlayerName() const
@@ -65,6 +66,16 @@ const coord2d_t &Player::getCoord() const
 void Player::setCoord(coord2d_t _pos) {
     pos = _pos;
 }
+
+bool Player::MoveClock() {
+    end = std::chrono::high_resolution_clock().now();
+    if (end-start >= std::chrono::milliseconds(250)) {
+        start = std::chrono::high_resolution_clock().now();
+        return true;
+    }
+    return false;
+}
+
 
 Player::~Player()
 {

@@ -43,6 +43,7 @@ class Player {
         const coord2d_t &getCoord() const;
         void setCoord(coord2d_t pos);
         irr::scene::ISceneNode *node;
+        bool MoveClock();
         ~Player();
 
     protected:
@@ -53,6 +54,8 @@ class Player {
         keybind_t keys;
         Logger log;
         coord2d_t pos;
+        std::chrono::time_point<std::chrono::high_resolution_clock> start;
+        std::chrono::time_point<std::chrono::high_resolution_clock> end;
 };
 
 #endif /* !PLAYER_HPP_ */

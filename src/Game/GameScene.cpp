@@ -141,7 +141,7 @@ bool GameScene::isWalkable(coord2d_t coord)
 
 void GameScene::playerUp(Player *player)
 {
-    if (isWalkable({player->getCoord().y-1, player->getCoord().x})) {
+    if (isWalkable({player->getCoord().y-1, player->getCoord().x}) && player->MoveClock()) {
         //playerAnimationUp
         map[player->getCoord().y][player->getCoord().x] = ' ';
         player->setCoord({player->getCoord().y-1, player->getCoord().x});
@@ -151,7 +151,7 @@ void GameScene::playerUp(Player *player)
 
 void GameScene::playerDown(Player *player)
 {
-    if (isWalkable({player->getCoord().y+1, player->getCoord().x})) {
+    if (isWalkable({player->getCoord().y+1, player->getCoord().x}) && player->MoveClock()) {
         //playerAnimationDown
         map[player->getCoord().y][player->getCoord().x] = ' ';
         player->setCoord({player->getCoord().y+1, player->getCoord().x});
@@ -161,7 +161,7 @@ void GameScene::playerDown(Player *player)
 
 void GameScene::playerLeft(Player *player)
 {
-    if (isWalkable({player->getCoord().y, player->getCoord().x-1})) {
+    if (isWalkable({player->getCoord().y, player->getCoord().x-1}) && player->MoveClock()) {
         //playerAnimationLeft
         map[player->getCoord().y][player->getCoord().x] = ' ';
         player->setCoord({player->getCoord().y, player->getCoord().x-1});
@@ -171,7 +171,7 @@ void GameScene::playerLeft(Player *player)
 
 void GameScene::playerRight(Player *player)
 {
-    if (isWalkable({player->getCoord().y, player->getCoord().x+1})) {
+    if (isWalkable({player->getCoord().y, player->getCoord().x+1}) && player->MoveClock()) {
         //playerAnimationRight
         map[player->getCoord().y][player->getCoord().x] = ' ';
         player->setCoord({player->getCoord().y, player->getCoord().x+1});
