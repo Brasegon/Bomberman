@@ -20,9 +20,36 @@ GameScene::GameScene(Config &conf) : AScene(conf)
         "#             #",
         "#             #",
         "#             #",
+        "#             #",
+        "#             #",
+        "#             #",
+        "#             #",
+        "#             #",
+        "#             #",
         "#P           P#",
         "###############",
     };
+    std::vector<irr::scene::ISceneNode *> nodeList;
+    for (size_t i = 0; i < map.size(); i++) {
+        for (size_t j = 0; j < map[i].length(); j += 1) {
+            float x1 = -90 + ((float)(j) * 20);
+            float y1 = 60 - ((float)(i) * 20);
+            if (map[i][j] != 'P' && map[i][j] != ' ') {
+                scene::ISceneNode* n = config.smgr->addCubeSceneNode();
+                n->setScale(core::vector3df(2, 2, 2));
+                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/rock.png"));
+                n->setMaterialFlag(video::EMF_LIGHTING, false);
+                n->setPosition(core::vector3df(x1, y1 ,30));
+                nodeList.push_back(n);
+            } else {
+                scene::ISceneNode* n = config.smgr->addCubeSceneNode();
+                n->setScale(core::vector3df(2, 2, 2));
+                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/sand.png"));
+                n->setMaterialFlag(video::EMF_LIGHTING, false);
+                n->setPosition(core::vector3df(x1, y1 ,50));
+            }
+        }
+    }
     for (size_t i = 0; i < config.playerList.size(); i++) {
         config.playerList[i]->initCoord(map);
         config.log.printInfo(std::to_string(i)+" {"+std::to_string(config.playerList[i]->getCoord().y)+" , "+std::to_string(config.playerList[i]->getCoord().x)+"}");
@@ -32,10 +59,11 @@ GameScene::GameScene(Config &conf) : AScene(conf)
             float x = -90 + ((float)(config.playerList[i]->getCoord().x) * 20);
             config.log.printInfo("Création du model du joueur 1");
             config.playerList[i]->node->setPosition(core::vector3df(x, y,30));
-            config.playerList[i]->node->setMaterialFlag(video::EMF_LIGHTING, false);
+            config.playerList[i]->node->setMaterialFlag(video::EMF_LIGHTING, true);
         }
     }
-    config.smgr->addCameraSceneNode(0, vector3df(0, 0, -200), vector3df(0, 0, 0));
+    config.smgr->addCameraSceneNodeFPS();
+    // config.smgr->addCameraSceneNode(0, vector3df(0, 45, -300), vector3df(0, 0, 0));
 }
 
 GameScene::~GameScene()
