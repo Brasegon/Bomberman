@@ -31,6 +31,7 @@ class GameScene : public AScene {
 
     private:
         std::vector<std::string> map;
+        scene::ISceneNode *node;
 };
 
 #endif /* !GAMESCENE_HPP_ */

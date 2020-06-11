@@ -42,7 +42,7 @@ class Player {
         void initCoord(const std::vector<std::string> &map);
         const coord2d_t &getCoord() const;
         void setCoord(coord2d_t pos);
-        
+        irr::scene::ISceneNode *node;
         ~Player();
 
     protected:
