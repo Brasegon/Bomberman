@@ -44,7 +44,7 @@ GameScene::GameScene(Config &conf) : AScene(conf)
             } else {
                 scene::ISceneNode* n = config.smgr->addCubeSceneNode();
                 n->setScale(core::vector3df(2, 2, 2));
-                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/sand.png"));
+                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/sand.jpg"));
                 n->setMaterialFlag(video::EMF_LIGHTING, false);
                 n->setPosition(core::vector3df(x1, y1 ,50));
             }
@@ -127,7 +127,7 @@ void GameScene::playerAction(Player *player)
     core::vector3df nodePosition = player->node->getPosition();
     if (config.event->IsKeyDown(player->getKeys().up)) {
         playerUp(player);
-        nodePosition.Y = 60 - (player->getCoord().y * 20);
+        nodePosition.Y = 60 - ((float)(player->getCoord().y) * 20);
         player->node->setPosition(nodePosition);
         for (size_t i = 0; i < map.size(); i++) {
             sstr << map[i] << std::endl;
@@ -137,8 +137,8 @@ void GameScene::playerAction(Player *player)
     }
     if (config.event->IsKeyDown(player->getKeys().down)) {
         playerDown(player);
-         nodePosition.Y = 60 - ((float)(player->getCoord().y) * 20);
-         player->node->setPosition(nodePosition);
+        nodePosition.Y = 60 - ((float)(player->getCoord().y) * 20);
+        player->node->setPosition(nodePosition);
         for (size_t i = 0; i < map.size(); i++) {
             sstr << map[i] << std::endl;
         }
@@ -248,6 +248,7 @@ void GameScene::explosion(Bomb bomb)
             if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y-i, bombpos.x}) {
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb.getPlayer()->getPlayerName());
+                config.playerList[j]->node->remove();
                 config.playerList.erase(config.playerList.begin()+j);
             }
         }
@@ -259,11 +260,12 @@ void GameScene::explosion(Bomb bomb)
         }
     }
     //fire down
-    for (size_t i = 0; i < 3+bomb.getPlayer()->getBuff().FireUp && bombpos.y+i < map.size(); i++) {
+    for (size_t i = 1; i < 3+bomb.getPlayer()->getBuff().FireUp && bombpos.y+i < map.size(); i++) {
         for (size_t j = 0; j < config.playerList.size(); j++) {
             if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y+i, bombpos.x}) {
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb.getPlayer()->getPlayerName());
+                config.playerList[j]->node->remove();
                 config.playerList.erase(config.playerList.begin()+j);
             }
         }
@@ -275,11 +277,12 @@ void GameScene::explosion(Bomb bomb)
         }
     }
     //fire left
-    for (size_t i = 0; i < 3+bomb.getPlayer()->getBuff().FireUp && (int)(bombpos.x-i); i++) {
+    for (size_t i = 1; i < 3+bomb.getPlayer()->getBuff().FireUp && (int)(bombpos.x-i); i++) {
         for (size_t j = 0; j < config.playerList.size(); j++) {
             if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y, bombpos.x-i}) {
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb.getPlayer()->getPlayerName());
+                config.playerList[j]->node->remove();
                 config.playerList.erase(config.playerList.begin()+j);
             }
         }
@@ -290,12 +293,13 @@ void GameScene::explosion(Bomb bomb)
             map[bombpos.y][bombpos.x-i] = ' ';
         }
     }
-    //fire right
-    for (size_t i = 0; i < 3+bomb.getPlayer()->getBuff().FireUp && bombpos.x+i < map[bombpos.y].size(); i++) {
+    //fire right             
+    for (size_t i = 1; i < 3+bomb.getPlayer()->getBuff().FireUp && bombpos.x+i < map[bombpos.y].size(); i++) {
         for (size_t j = 0; j < config.playerList.size(); j++) {
             if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y, bombpos.x+i}) {
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb.getPlayer()->getPlayerName());
+                config.playerList[j]->node->remove();
                 config.playerList.erase(config.playerList.begin()+j);
             }
         }
