@@ -11,6 +11,7 @@ Bomb::Bomb(Player *_player)
 :player(_player), pos(_player->getCoord()), explosionTime(std::chrono::high_resolution_clock().now()+std::chrono::milliseconds(2000))
 {
     node = NULL;
+    fireTime = explosionTime+std::chrono::milliseconds(500);
 }
 
 Bomb::~Bomb()
@@ -30,6 +31,13 @@ Player *Bomb::getPlayer()
 bool Bomb::isExploded()
 {
     if (std::chrono::high_resolution_clock().now() < explosionTime)
+        return false;
+    return true;
+}
+
+bool Bomb::isExplosionEnd()
+{
+    if (std::chrono::high_resolution_clock().now() < fireTime)
         return false;
     return true;
 }

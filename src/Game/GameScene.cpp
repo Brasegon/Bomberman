@@ -118,6 +118,15 @@ void GameScene::updateGame()
     for (size_t i = 0; i < bombList.size(); i++) {
         if (bombList[i]->isExploded()) {
             explosion(bombList[i]);
+            if(bombList[i]->node != NULL) {
+                bombList[i]->node->remove();
+                bombList[i]->node = NULL;
+            }
+        }
+        if (bombList[i]->isExplosionEnd()) {
+            for (size_t j = 0; j < bombList[i]->firenode.size(); j++) {
+                bombList[i]->firenode[j]->remove();
+            }
             bombList.erase(bombList.begin()+i);
         }
     }
@@ -251,6 +260,8 @@ void GameScene::playerDrop(Player *player)
 void GameScene::explosion(Bomb *bomb)
 {
     std::string nonDestructible = "X#";
+    float y = 0;
+    float x = 0;
 
     coord2d_t bombpos = bomb->getCoord();
     //fire up
@@ -266,9 +277,15 @@ void GameScene::explosion(Bomb *bomb)
         if (nonDestructible.find(map[bombpos.y-i][bombpos.x]) != std::string::npos) {
             break;
         }
-        else {
+        bomb->firenode.push_back(config.smgr->addSphereSceneNode());
+        y = 60 - ((float)(bombpos.y-i) * 20);
+        x = -90 + ((float)(bombpos.x) * 20);
+        bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
+        if (map[bombpos.y-i][bombpos.x] == 'D') {
             map[bombpos.y-i][bombpos.x] = ' ';
+            break;
         }
+        map[bombpos.y-i][bombpos.x] = ' ';
     }
     //fire down
     for (size_t i = 1; i < 3+bomb->getPlayer()->getBuff().FireUp && bombpos.y+i < map.size(); i++) {
@@ -283,9 +300,15 @@ void GameScene::explosion(Bomb *bomb)
         if (nonDestructible.find(map[bombpos.y+i][bombpos.x]) != std::string::npos) {
             break;
         }
-        else {
+        bomb->firenode.push_back(config.smgr->addSphereSceneNode());
+        y = 60 - ((float)(bombpos.y+i) * 20);
+        x = -90 + ((float)(bombpos.x) * 20);
+        bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
+            if (map[bombpos.y+i][bombpos.x] == 'D') {
             map[bombpos.y+i][bombpos.x] = ' ';
+            break;
         }
+        map[bombpos.y+i][bombpos.x] = ' ';
     }
     //fire left
     for (size_t i = 1; i < 3+bomb->getPlayer()->getBuff().FireUp && (int)(bombpos.x-i); i++) {
@@ -300,9 +323,15 @@ void GameScene::explosion(Bomb *bomb)
         if (nonDestructible.find(map[bombpos.y][bombpos.x-i]) != std::string::npos) {
             break;
         }
-        else {
+        bomb->firenode.push_back(config.smgr->addSphereSceneNode());
+        y = 60 - ((float)(bombpos.y) * 20);
+        x = -90 + ((float)(bombpos.x-i) * 20);
+        bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
+        if (map[bombpos.y][bombpos.x-i] == 'D') {
             map[bombpos.y][bombpos.x-i] = ' ';
+            break;
         }
+        map[bombpos.y][bombpos.x-i] = ' ';
     }
     //fire right             
     for (size_t i = 1; i < 3+bomb->getPlayer()->getBuff().FireUp && bombpos.x+i < map[bombpos.y].size(); i++) {
@@ -317,10 +346,14 @@ void GameScene::explosion(Bomb *bomb)
         if (nonDestructible.find(map[bombpos.y][bombpos.x+i]) != std::string::npos) {
             break;
         }
-        else {
+        bomb->firenode.push_back(config.smgr->addSphereSceneNode());
+        y = 60 - ((float)(bombpos.y) * 20);
+        x = -90 + ((float)(bombpos.x+i) * 20);
+        bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
+        if (map[bombpos.y][bombpos.x+i] == 'D') {
             map[bombpos.y][bombpos.x+i] = ' ';
+            break;
         }
+        map[bombpos.y][bombpos.x+i] = ' ';
     }
-    if(bomb->node != NULL)
-        bomb->node->remove();
 }
