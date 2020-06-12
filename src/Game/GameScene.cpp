@@ -69,6 +69,7 @@ GameScene::GameScene(Config &conf) : AScene(conf)
 
 GameScene::~GameScene()
 {
+    save.saveMap(map, config);
     config.smgr->clear();
     config.guienv->clear();
     config.driver->clearZBuffer();
