@@ -11,7 +11,7 @@
 #include "../Menu/AScene.hpp"
 #include "../Event/Event.hpp"
 #include "Bomb.hpp"
-
+#include "../Save/Save.hpp"
 class GameScene : public AScene {
     public:
         GameScene(Config &conf);
@@ -35,6 +35,7 @@ class GameScene : public AScene {
         std::vector<std::string> map;
         scene::ISceneNode *node;
         std::vector<Bomb *> bombList;
+        Save save;
 };
 
 #endif /* !GAMESCENE_HPP_ */
