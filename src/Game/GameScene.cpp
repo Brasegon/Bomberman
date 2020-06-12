@@ -13,20 +13,21 @@ GameScene::GameScene(Config &conf) : AScene(conf)
     config.guienv = config.device->getGUIEnvironment();
     map = {
         "###############",
-        "#P           P#",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#P           P#",
+        "#PDD       DDP#",
+        "# XXXXX XXXXX #",
+        "# X   D D   X #",
+        "# X XXX XXX X #",
+        "#   DD   DD   #",
+        "#XXXX XXX XXXX#",
+        "# D    X    D #",
+        "# XXXXXXXXXXX #",
+        "# D    X    D #",
+        "#XXXX XXX XXXX#",
+        "#   DD   DD   #",
+        "# X XXX XXX X #",
+        "# X   D D   X #",
+        "# XXXXX XXXXX #",
+        "#PDD       DDP#",
         "###############",
     };
     std::vector<irr::scene::ISceneNode *> nodeList;
@@ -34,10 +35,17 @@ GameScene::GameScene(Config &conf) : AScene(conf)
         for (size_t j = 0; j < map[i].length(); j += 1) {
             float x1 = -90 + ((float)(j) * 20);
             float y1 = 60 - ((float)(i) * 20);
-            if (map[i][j] != 'P' && map[i][j] != ' ') {
+            if (map[i][j] == '#' || map[i][j] == 'X') {
                 scene::ISceneNode* n = config.smgr->addCubeSceneNode();
                 n->setScale(core::vector3df(2, 2, 2));
                 n->setMaterialTexture(0, config.driver->getTexture("assets/textures/wallNoDestru.bmp"));
+                n->setMaterialFlag(video::EMF_LIGHTING, false);
+                n->setPosition(core::vector3df(x1, y1 ,30));
+                nodeList.push_back(n);
+            } else if (map[i][j] == 'D') {
+                scene::ISceneNode* n = config.smgr->addCubeSceneNode();
+                n->setScale(core::vector3df(2, 2, 2));
+                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/rock.png"));
                 n->setMaterialFlag(video::EMF_LIGHTING, false);
                 n->setPosition(core::vector3df(x1, y1 ,30));
                 nodeList.push_back(n);
@@ -91,7 +99,6 @@ ChangeScene GameScene::update()
         config.smgr->getActiveCamera()->setRotation(vector3df(0, 0, 0));
         config.smgr->getActiveCamera()->setPosition(vector3df(0, 45, -300));
     }
-
     updateGame();
     return {false, NONE};
 }
@@ -111,6 +118,11 @@ void GameScene::setMap(std::vector<std::string> setmap)
 
 void GameScene::updateGame()
 {
+    for (size_t i = 0; i < map.size(); i++) {
+        for (size_t j = 0; j < map[i].size(); j++) {
+
+        }
+    }
     for (size_t i = 0; i < config.playerList.size(); i++) {
         if (!config.playerList[i]->getIsBot()) {
             playerAction(config.playerList[i]);
@@ -118,8 +130,8 @@ void GameScene::updateGame()
     }
     for (size_t i = 0; i < bombList.size(); i++) {
         if (bombList[i]->isExploded()) {
-            explosion(bombList[i]);
             if(bombList[i]->node != NULL) {
+                explosion(bombList[i]);
                 bombList[i]->node->remove();
                 bombList[i]->node = NULL;
             }
