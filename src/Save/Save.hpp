@@ -12,11 +12,13 @@
 #include "../Engine/Config.hpp"
 #include "../Event/Event.hpp"
 #include "../Logger/Logger.hpp"
-
+#include "../Player/Player.hpp"
 class Save {
     public:
         Save();
         bool saveMap(std::vector<std::string> map, Config &conf);
+        const std::vector<Player *> getPlayerSave() const;
+        const std::vector<std::string> getMap() const;
         ~Save();
 
     protected:

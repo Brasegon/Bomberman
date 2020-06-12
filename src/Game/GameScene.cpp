@@ -11,24 +11,29 @@ GameScene::GameScene(Config &conf) : AScene(conf)
 {
     config.smgr = config.device->getSceneManager();
     config.guienv = config.device->getGUIEnvironment();
-    map = {
-        "###############",
-        "#P           P#",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#             #",
-        "#P           P#",
-        "###############",
-    };
+    if (config.newGame) {
+        map = {
+            "###############",
+            "#P           P#",
+            "#      #      #",
+            "#########     #",
+            "#        #    #",
+            "#        #    #",
+            "#  #######    #",
+            "#             #",
+            "#             #",
+            "#             #",
+            "#             #",
+            "#             #",
+            "#             #",
+            "#             #",
+            "#P           P#",
+            "###############",
+        };
+    } else {
+        config.playerList = save.getPlayerSave();
+        map = save.getMap();
+    }
     std::vector<irr::scene::ISceneNode *> nodeList;
     for (size_t i = 0; i < map.size(); i++) {
         for (size_t j = 0; j < map[i].length(); j += 1) {
@@ -142,41 +147,41 @@ void GameScene::playerAction(Player *player)
         playerUp(player);
         nodePosition.Y = 60 - ((float)(player->getCoord().y) * 20);
         player->node->setPosition(nodePosition);
-        for (size_t i = 0; i < map.size(); i++) {
-            sstr << map[i] << std::endl;
-        }
-        sstr << std::endl;
-        config.log.printInfo(sstr.str());
+        // // for (size_t i = 0; i < map.size(); i++) {
+        // //     sstr << map[i] << std::endl;
+        // // }
+        // sstr << std::endl;
+        // config.log.printInfo(sstr.str());
     }
     if (config.event->IsKeyDown(player->getKeys().down)) {
         playerDown(player);
         nodePosition.Y = 60 - ((float)(player->getCoord().y) * 20);
         player->node->setPosition(nodePosition);
-        for (size_t i = 0; i < map.size(); i++) {
-            sstr << map[i] << std::endl;
-        }
-        sstr << std::endl;
-        config.log.printInfo(sstr.str());
+        // for (size_t i = 0; i < map.size(); i++) {
+        //     sstr << map[i] << std::endl;
+        // }
+        // sstr << std::endl;
+        // config.log.printInfo(sstr.str());
     }
     if (config.event->IsKeyDown(player->getKeys().left)) {
         playerLeft(player);
         nodePosition.X = -90 + ((float)(player->getCoord().x) * 20);
         player->node->setPosition(nodePosition);
-        for (size_t i = 0; i < map.size(); i++) {
-            sstr << map[i] << std::endl;
-        }
-        sstr << std::endl;
-        config.log.printInfo(sstr.str());
+        // for (size_t i = 0; i < map.size(); i++) {
+        //     sstr << map[i] << std::endl;
+        // }
+        // sstr << std::endl;
+        // config.log.printInfo(sstr.str());
     }
     if (config.event->IsKeyDown(player->getKeys().right)) {
         playerRight(player);
         nodePosition.X = -90 + ((float)(player->getCoord().x) * 20);
         player->node->setPosition(nodePosition);
-        for (size_t i = 0; i < map.size(); i++) {
-            sstr << map[i] << std::endl;
-        }
-        sstr << std::endl;
-        config.log.printInfo(sstr.str());
+        // for (size_t i = 0; i < map.size(); i++) {
+        //     sstr << map[i] << std::endl;
+        // }
+        // sstr << std::endl;
+        // config.log.printInfo(sstr.str());
     }
     if (config.event->IsKeyDown(player->getKeys().drop)) {
         playerDrop(player);

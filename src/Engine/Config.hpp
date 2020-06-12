@@ -37,6 +37,7 @@ class Config {
         std::vector<Player *> playerList;
         Event *event;
         Setting setting;
+        bool newGame;
     protected:
     private:
 };
