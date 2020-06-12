@@ -17,8 +17,10 @@ bool Save::saveMap(std::vector<std::string> map, Config &conf)
     std::ofstream saveMap("save.txt");
 
     if (saveMap) {
+        saveMap << std::to_string(conf.playerList.size()) << std::endl;
         for (size_t i = 0; i < conf.playerList.size(); i += 1) {
-            saveMap << conf.playerList[i]->getPlayerName() << " " << ((conf.playerList[i]->getIsBot())  ? "1" : "0") << std::endl;
+            saveMap << conf.playerList[i]->getPlayerName() << " ";
+            saveMap << ((conf.playerList[i]->getIsBot())  ? "1" : "0") << std::endl;
         }
         for (size_t i = 0; i < map.size(); i += 1) {
             saveMap << map[i] << std::endl;
@@ -26,6 +28,49 @@ bool Save::saveMap(std::vector<std::string> map, Config &conf)
         return true;
     }
     return false;
+}
+
+const std::vector<Player *> Save::getPlayerSave() const 
+{
+    std::ifstream saveMap("save.txt");
+    std::vector<Player *> playerList;
+    std::string line;
+    if (saveMap) {
+        std::getline(saveMap, line);
+        int nb = std::stoi(line);
+        for (int i = 0; i < nb; i += 1) {
+            std::getline(saveMap, line);
+            std::stringstream ss(line);
+            std::string token;
+            std::vector<std::string> test;
+            while (std::getline(ss, token, ' ')) {
+                test.push_back(token);
+            }
+            bool isBot = (test[1] == "1") ? true : false;
+            playerList.push_back(new Player(test[0], isBot, i));
+        }
+
+    }
+    return playerList;
+}
+
+const std::vector<std::string> Save::getMap() const
+{   
+    std::ifstream saveMap("save.txt");
+    std::vector<std::string> map;
+    if (saveMap) {
+        std::string line;
+        std::getline(saveMap, line);
+        int nb = std::stoi(line);
+        for (int i = 0; std::getline(saveMap, line); i += 1) {
+            if (i > nb - 1) {
+                map.push_back(line);
+                std::cout << line << std::endl;
+            }
+        }
+    }
+    return map;
+
 }
 
 Save::~Save()

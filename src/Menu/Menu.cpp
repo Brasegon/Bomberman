@@ -25,8 +25,9 @@ Menu::Menu(Config &conf) : AScene(conf)
 
     logo = config.driver->getTexture("./assets/textures/logo.png");
 
-    addButton(1280 / 2 - 50, 350, 100, 32, L"PLAY", 1);
-    addButton(1280 / 2 - 50, 350 + 40, 100, 32, L"QUIT", 2);
+    addButton(1280 / 2 - 50, 350, 100, 32, L"NEW GAME", 1);
+    addButton(1280 / 2 - 50, 350 + 80, 100, 32, L"QUIT", 2);
+    addButton(1280 / 2 - 50, 350 + 40, 100, 32, L"LOAD GAME", 3);
     
     log.printInfo("Loading Main Menu");
 }
@@ -52,6 +53,11 @@ ChangeScene Menu::checkClick(ChangeScene change)
     }
     if (config.event->isButtonClicked(2)) {
         std::exit(0);
+    }
+    if (config.event->isButtonClicked(3)) {
+        config.setting.music->stop();
+        config.newGame = false;
+        return {true, GAME};
     }
     return {false, NONE};
 }

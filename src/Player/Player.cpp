@@ -18,7 +18,7 @@ Player::Player(const std::string &name, bool bot, size_t nb)
 :playerName(name), isBot(bot), playerNb(nb), keys(keybinds[nb]), pos({0,0}), buff({0, 0, 250, false})
 {
     std::string iaOrNot = (isBot) ? "IA" : "Player";
-    log.printInfo("Initialisation du joueur " + playerName + "(" + iaOrNot + ")");
+    log.printInfo("Initialisation du joueur " + playerName + "(" + iaOrNot + ")" + " Key Number : " + std::to_string(nb));
     start = std::chrono::high_resolution_clock().now();
 }
 
