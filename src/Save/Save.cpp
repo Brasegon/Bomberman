@@ -20,7 +20,8 @@ bool Save::saveMap(std::vector<std::string> map, Config &conf)
         saveMap << std::to_string(conf.playerList.size()) << std::endl;
         for (size_t i = 0; i < conf.playerList.size(); i += 1) {
             saveMap << conf.playerList[i]->getPlayerName() << " ";
-            saveMap << ((conf.playerList[i]->getIsBot())  ? "1" : "0") << std::endl;
+            saveMap << ((conf.playerList[i]->getIsBot())  ? "1 " : "0 ");
+            saveMap << conf.playerList[i]->getCoord().x << " " << conf.playerList[i]->getCoord().y << std::endl;
         }
         for (size_t i = 0; i < map.size(); i += 1) {
             saveMap << map[i] << std::endl;
@@ -47,7 +48,11 @@ const std::vector<Player *> Save::getPlayerSave() const
                 test.push_back(token);
             }
             bool isBot = (test[1] == "1") ? true : false;
+            coord2d_t pos;
+            pos.x = std::stoi(test[2]);
+            pos.y = std::stoi(test[3]);
             playerList.push_back(new Player(test[0], isBot, i));
+            playerList[playerList.size() - 1]->setCoord(pos);
         }
 
     }

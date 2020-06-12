@@ -65,7 +65,9 @@ GameScene::GameScene(Config &conf) : AScene(conf)
         }
     }
     for (size_t i = 0; i < config.playerList.size(); i++) {
-        config.playerList[i]->initCoord(map);
+        if (config.newGame) {
+            config.playerList[i]->initCoord(map);       
+        }
         config.log.printInfo("Player"+std::to_string(i)+" position{"+std::to_string(config.playerList[i]->getCoord().y)+" , "+std::to_string(config.playerList[i]->getCoord().x)+"}");
         config.playerList[i]->node = config.smgr->addSphereSceneNode();
         if (config.playerList[i]->node) {
