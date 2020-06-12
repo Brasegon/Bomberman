@@ -37,14 +37,14 @@ GameScene::GameScene(Config &conf) : AScene(conf)
             if (map[i][j] != 'P' && map[i][j] != ' ') {
                 scene::ISceneNode* n = config.smgr->addCubeSceneNode();
                 n->setScale(core::vector3df(2, 2, 2));
-                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/rock.png"));
+                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/wallNoDestru.bmp"));
                 n->setMaterialFlag(video::EMF_LIGHTING, false);
                 n->setPosition(core::vector3df(x1, y1 ,30));
                 nodeList.push_back(n);
             } else {
                 scene::ISceneNode* n = config.smgr->addCubeSceneNode();
                 n->setScale(core::vector3df(2, 2, 2));
-                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/sand.jpg"));
+                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/sand.png"));
                 n->setMaterialFlag(video::EMF_LIGHTING, false);
                 n->setPosition(core::vector3df(x1, y1 ,50));
             }
@@ -63,12 +63,15 @@ GameScene::GameScene(Config &conf) : AScene(conf)
         }
     }
 
-    config.smgr->addCameraSceneNodeFPS(0, 3, 1, -1, 0, 0/*, true*/);
-    // config.smgr->addCameraSceneNode(0, vector3df(0, 45, -300), vector3df(0, 0, 0));
+    // config.smgr->addCameraSceneNodeFPS(0, 3, 1, -1, 0, 0/*, true*/);
+    config.smgr->addCameraSceneNode(0, vector3df(0, 0, -300), vector3df(0, 0, 0));
 }
 
 GameScene::~GameScene()
 {
+    config.smgr->clear();
+    config.guienv->clear();
+    config.driver->clearZBuffer();
 }
 
 void GameScene::display()
@@ -235,10 +238,11 @@ void GameScene::playerDrop(Player *player)
     }
     if (count < 1+player->getBuff().BombUp) {
         bombList.push_back(new Bomb(player));
-        bombList[bombList.size()-1]->node = config.smgr->addSphereSceneNode();
+        bombList[bombList.size()-1]->node = config.smgr->addAnimatedMeshSceneNode(config.smgr->getMesh("assets/Bomb.md2"));
         float y = 60 - ((float)(bombList[bombList.size()-1]->getCoord().y) * 20);
         float x = -90 + ((float)(bombList[bombList.size()-1]->getCoord().x) * 20);
-        bombList[bombList.size()-1]->node->setPosition(core::vector3df(x, y, 30));
+        bombList[bombList.size()-1]->node->setPosition(core::vector3df(x, y, 20));
+        bombList[bombList.size()-1]->node->setScale(core::vector3df(0.05, 0.05, 0.05));
         bombList[bombList.size()-1]->node->setMaterialFlag(video::EMF_LIGHTING, true);
         bombList[bombList.size()-1]->node->setMaterialTexture(0, config.driver->getTexture("assets/textures/redtexture.jpg"));
     }
@@ -252,7 +256,7 @@ void GameScene::explosion(Bomb *bomb)
     //fire up
     for (size_t i = 0; i < 3+bomb->getPlayer()->getBuff().FireUp && (int)(bombpos.y-i) >= 0; i++) {
         for (size_t j = 0; j < config.playerList.size(); j++) {
-            if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y-i, bombpos.x}) {
+            if(config.playerList[j]->getCoord().x == bombpos.x && config.playerList[j]->getCoord().y == bombpos.y-i) {
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
                 config.playerList[j]->node->remove();
@@ -269,7 +273,7 @@ void GameScene::explosion(Bomb *bomb)
     //fire down
     for (size_t i = 1; i < 3+bomb->getPlayer()->getBuff().FireUp && bombpos.y+i < map.size(); i++) {
         for (size_t j = 0; j < config.playerList.size(); j++) {
-            if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y+i, bombpos.x}) {
+            if(config.playerList[j]->getCoord().x == bombpos.x && config.playerList[j]->getCoord().y == bombpos.y+i) {
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
                 config.playerList[j]->node->remove();
@@ -286,7 +290,7 @@ void GameScene::explosion(Bomb *bomb)
     //fire left
     for (size_t i = 1; i < 3+bomb->getPlayer()->getBuff().FireUp && (int)(bombpos.x-i); i++) {
         for (size_t j = 0; j < config.playerList.size(); j++) {
-            if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y, bombpos.x-i}) {
+            if(config.playerList[j]->getCoord().x == bombpos.x-i && config.playerList[j]->getCoord().y == bombpos.y) {
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
                 config.playerList[j]->node->remove();
@@ -303,7 +307,7 @@ void GameScene::explosion(Bomb *bomb)
     //fire right             
     for (size_t i = 1; i < 3+bomb->getPlayer()->getBuff().FireUp && bombpos.x+i < map[bombpos.y].size(); i++) {
         for (size_t j = 0; j < config.playerList.size(); j++) {
-            if(config.playerList[j]->getCoord() == (coord2d_t){bombpos.y, bombpos.x+i}) {
+            if(config.playerList[j]->getCoord().x == bombpos.x+i && config.playerList[j]->getCoord().y == bombpos.y) {
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
                 config.playerList[j]->node->remove();
