@@ -10,6 +10,7 @@
 Bomb::Bomb(Player *_player)
 :player(_player), pos(_player->getCoord()), explosionTime(std::chrono::high_resolution_clock().now()+std::chrono::milliseconds(2000))
 {
+    node = NULL;
 }
 
 Bomb::~Bomb()

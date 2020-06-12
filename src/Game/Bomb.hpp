@@ -18,6 +18,7 @@ class Bomb {
         const coord2d_t &getCoord();
         Player *getPlayer();
         bool isExploded();
+        irr::scene::ISceneNode *node;
 
     private:
         Player *player;

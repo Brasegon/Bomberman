@@ -28,13 +28,13 @@ class GameScene : public AScene {
         void playerLeft(Player *player);
         void playerRight(Player *player);
         void playerDrop(Player *player);
-        void explosion(Bomb bomb);
+        void explosion(Bomb *bomb);
         bool isWalkable(coord2d_t coord);
 
     private:
         std::vector<std::string> map;
         scene::ISceneNode *node;
-        std::vector<Bomb> bombList;
+        std::vector<Bomb *> bombList;
 };
 
 #endif /* !GAMESCENE_HPP_ */
