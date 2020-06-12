@@ -12,6 +12,13 @@
 #include "../Event/Event.hpp"
 #include "Bomb.hpp"
 #include "../Save/Save.hpp"
+
+typedef struct MapNode_s {
+    irr::scene::ISceneNode * node;
+    coord2d_t coord;
+    bool isDestructible;
+} MapNode_t;
+
 class GameScene : public AScene {
     public:
         GameScene(Config &conf);
@@ -30,8 +37,10 @@ class GameScene : public AScene {
         void playerDrop(Player *player);
         void explosion(Bomb *bomb);
         bool isWalkable(coord2d_t coord);
+        void destroyMapNode(coord2d_t coord);
 
     private:
+        std::vector<MapNode_t> mapnode;
         std::vector<std::string> map;
         scene::ISceneNode *node;
         std::vector<Bomb *> bombList;

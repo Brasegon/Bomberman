@@ -35,7 +35,6 @@ GameScene::GameScene(Config &conf) : AScene(conf)
         config.playerList = save.getPlayerSave();
         map = save.getMap();
     }
-    std::vector<irr::scene::ISceneNode *> nodeList;
     for (size_t i = 0; i < map.size(); i++) {
         for (size_t j = 0; j < map[i].length(); j += 1) {
             float x1 = -90 + ((float)(j) * 20);
@@ -46,20 +45,22 @@ GameScene::GameScene(Config &conf) : AScene(conf)
                 n->setMaterialTexture(0, config.driver->getTexture("assets/textures/wallNoDestru.bmp"));
                 n->setMaterialFlag(video::EMF_LIGHTING, false);
                 n->setPosition(core::vector3df(x1, y1 ,30));
-                nodeList.push_back(n);
-            } else if (map[i][j] == 'D') {
-                scene::ISceneNode* n = config.smgr->addCubeSceneNode();
-                n->setScale(core::vector3df(2, 2, 2));
-                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/rock.png"));
-                n->setMaterialFlag(video::EMF_LIGHTING, false);
-                n->setPosition(core::vector3df(x1, y1 ,30));
-                nodeList.push_back(n);
+                mapnode.push_back({n, {i, j}, false});
             } else {
                 scene::ISceneNode* n = config.smgr->addCubeSceneNode();
                 n->setScale(core::vector3df(2, 2, 2));
                 n->setMaterialTexture(0, config.driver->getTexture("assets/textures/sand.png"));
                 n->setMaterialFlag(video::EMF_LIGHTING, false);
                 n->setPosition(core::vector3df(x1, y1 ,50));
+                mapnode.push_back({n, {i, j}, false});
+            }
+            if (map[i][j] == 'D') {
+                scene::ISceneNode* n = config.smgr->addCubeSceneNode();
+                n->setScale(core::vector3df(2, 2, 2));
+                n->setMaterialTexture(0, config.driver->getTexture("assets/textures/rock.png"));
+                n->setMaterialFlag(video::EMF_LIGHTING, false);
+                n->setPosition(core::vector3df(x1, y1 ,30));
+                mapnode.push_back({n, {i, j},true});
             }
         }
     }
@@ -301,6 +302,7 @@ void GameScene::explosion(Bomb *bomb)
         bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
         if (map[bombpos.y-i][bombpos.x] == 'D') {
             map[bombpos.y-i][bombpos.x] = ' ';
+            destroyMapNode({bombpos.y-i, bombpos.x});
             break;
         }
         map[bombpos.y-i][bombpos.x] = ' ';
@@ -324,6 +326,7 @@ void GameScene::explosion(Bomb *bomb)
         bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
             if (map[bombpos.y+i][bombpos.x] == 'D') {
             map[bombpos.y+i][bombpos.x] = ' ';
+            destroyMapNode({bombpos.y+i, bombpos.x});
             break;
         }
         map[bombpos.y+i][bombpos.x] = ' ';
@@ -347,6 +350,7 @@ void GameScene::explosion(Bomb *bomb)
         bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
         if (map[bombpos.y][bombpos.x-i] == 'D') {
             map[bombpos.y][bombpos.x-i] = ' ';
+            destroyMapNode({bombpos.y, bombpos.x-i});
             break;
         }
         map[bombpos.y][bombpos.x-i] = ' ';
@@ -370,8 +374,17 @@ void GameScene::explosion(Bomb *bomb)
         bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
         if (map[bombpos.y][bombpos.x+i] == 'D') {
             map[bombpos.y][bombpos.x+i] = ' ';
+            destroyMapNode({bombpos.y, bombpos.x+i});
             break;
         }
         map[bombpos.y][bombpos.x+i] = ' ';
+    }
+}
+void GameScene::destroyMapNode(coord2d_t coord)
+{
+    for (size_t i = 0; i < mapnode.size(); i++) {
+        if (mapnode[i].coord == coord && mapnode[i].isDestructible) {
+            mapnode[i].node->remove();
+        }
     }
 }

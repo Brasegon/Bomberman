@@ -9,19 +9,15 @@
 
 Core::Core()
 {
-}
-
-void Core::init()
-{
     engine = new Engine(1280, 720, L"Indie Studio");
 }
 
 void Core::launch()
 {
-    init();
     engine->run();
 }
 
 Core::~Core()
 {
+    delete engine;
 }
