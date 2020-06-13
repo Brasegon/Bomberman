@@ -11,6 +11,11 @@
 #include "../my.hpp"
 #include "../Player/Player.hpp"
 
+typedef struct fire_s {
+    irr::scene::ISceneNode *node;
+    coord2d_t coord;
+} fire_t;
+
 class Bomb {
     public:
         Bomb(Player *player);
@@ -20,7 +25,7 @@ class Bomb {
         bool isExploded();
         bool isExplosionEnd();
         irr::scene::IAnimatedMeshSceneNode *node;
-        std::vector<irr::scene::ISceneNode *> firenode;
+        std::vector<fire_t> firenode;
 
     private:
         Player *player;

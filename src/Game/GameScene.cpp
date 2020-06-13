@@ -15,10 +15,10 @@ GameScene::GameScene(Config &conf) : AScene(conf)
     if (config.newGame) {
         map = {
             "###############",
-            "#PDD       DDP#",
+            "#P DD     DD P#",
             "# XXXXX XXXXX #",
-            "# X   D D   X #",
-            "# X XXX XXX X #",
+            "#DX   D D   XD#",
+            "#DX XXX XXX XD#",
             "#   DD   DD   #",
             "#XXXX XXX XXXX#",
             "# D    X    D #",
@@ -26,10 +26,10 @@ GameScene::GameScene(Config &conf) : AScene(conf)
             "# D    X    D #",
             "#XXXX XXX XXXX#",
             "#   DD   DD   #",
-            "# X XXX XXX X #",
-            "# X   D D   X #",
+            "#DX XXX XXX XD#",
+            "#DX   D D   XD#",
             "# XXXXX XXXXX #",
-            "#PDD       DDP#",
+            "#P DD     DD P#",
             "###############",
         };
     } else {
@@ -127,17 +127,20 @@ void GameScene::setMap(std::vector<std::string> setmap)
 
 void GameScene::updateGame()
 {
-    for (size_t i = 0; i < mapnode.size(); i++) {
-        if (mapnode[i].isDestructible) {
-            map[mapnode[i].coord.y][mapnode[i].coord.x] = 'D';
-        }
-    }
+    //player action
     for (size_t i = 0; i < config.playerList.size(); i++) {
         if (!config.playerList[i]->getIsBot()) {
             playerAction(config.playerList[i]);
         }
     }
+    //check destructible node
+    for (size_t i = 0; i < mapnode.size(); i++) {
+        if (mapnode[i].isDestructible) {
+            map[mapnode[i].coord.y][mapnode[i].coord.x] = 'D';
+        }
+    }
     for (size_t i = 0; i < bombList.size(); i++) {
+        //check if bomb exploded
         if (bombList[i]->isExploded()) {
             if(bombList[i]->node != NULL) {
                 explosion(bombList[i]);
@@ -145,20 +148,34 @@ void GameScene::updateGame()
                 bombList[i]->node = NULL;
             }
         }
+        //check if any player got exploded or burnt 
+        for (size_t j = 0; j < bombList[i]->firenode.size(); j++) {
+            for (size_t k = 0; k < config.playerList.size(); k++) {
+                if (bombList[i]->firenode[j].coord == config.playerList[k]->getCoord()) {
+                    config.log.printInfo(config.playerList[k]->getPlayerName()+" killed by "+bombList[i]->getPlayer()->getPlayerName());
+                    config.playerList[k]->node->remove();
+                    delete config.playerList[k];
+                    config.playerList.erase(config.playerList.begin()+k);
+                }
+            }
+        }
+            //check if fire went out
         if (bombList[i]->isExplosionEnd()) {
             for (size_t j = 0; j < bombList[i]->firenode.size(); j++) {
-                bombList[i]->firenode[j]->remove();
+                bombList[i]->firenode[j].node->remove();
             }
             delete bombList[i];
             bombList.erase(bombList.begin()+i);
         }
     }
     for (size_t i = 0; i < powerupList.size(); i++) {
+        //check if powerup despawned
         if (powerupList[i]->isDespawn()) {
             powerupList[i]->node->remove();
             delete powerupList[i];
             powerupList.erase(powerupList.begin()+i);
         }
+        //check if player picked up a powerup
         for (size_t j = 0; j < config.playerList.size(); j++) {
             if (config.playerList[j]->getCoord() == powerupList[i]->getCoord()) {
                 config.playerList[j]->addBuff(powerupList[i]->getType());
@@ -288,22 +305,13 @@ void GameScene::explosion(Bomb *bomb)
     coord2d_t bombpos = bomb->getCoord();
     //fire up
     for (size_t i = 0; i < 3+bomb->getPlayer()->getBuff().FireUp && (int)(bombpos.y-i) >= 0; i++) {
-        for (size_t j = 0; j < config.playerList.size(); j++) {
-            if(config.playerList[j]->getCoord().x == bombpos.x && config.playerList[j]->getCoord().y == bombpos.y-i) {
-                //player die
-                config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
-                config.playerList[j]->node->remove();
-                delete config.playerList[j];
-                config.playerList.erase(config.playerList.begin()+j);
-            }
-        }
         if (nonDestructible.find(map[bombpos.y-i][bombpos.x]) != std::string::npos) {
             break;
         }
-        bomb->firenode.push_back(config.smgr->addSphereSceneNode());
+        bomb->firenode.push_back({config.smgr->addSphereSceneNode(), {bombpos.y-i, bombpos.x}});
         y = 60 - ((float)(bombpos.y-i) * 20);
         x = -90 + ((float)(bombpos.x) * 20);
-        bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
+        bomb->firenode[bomb->firenode.size()-1].node->setPosition(core::vector3df(x, y, 20));
         if (map[bombpos.y-i][bombpos.x] == 'D') {
             map[bombpos.y-i][bombpos.x] = ' ';
             destroyMapNode({bombpos.y-i, bombpos.x});
@@ -314,22 +322,13 @@ void GameScene::explosion(Bomb *bomb)
     }
     //fire down
     for (size_t i = 1; i < 3+bomb->getPlayer()->getBuff().FireUp && bombpos.y+i < map.size(); i++) {
-        for (size_t j = 0; j < config.playerList.size(); j++) {
-            if(config.playerList[j]->getCoord().x == bombpos.x && config.playerList[j]->getCoord().y == bombpos.y+i) {
-                //player die
-                config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
-                config.playerList[j]->node->remove();
-                delete config.playerList[j];
-                config.playerList.erase(config.playerList.begin()+j);
-            }
-        }
         if (nonDestructible.find(map[bombpos.y+i][bombpos.x]) != std::string::npos) {
             break;
         }
-        bomb->firenode.push_back(config.smgr->addSphereSceneNode());
+        bomb->firenode.push_back({config.smgr->addSphereSceneNode(), {bombpos.y+i, bombpos.x}});
         y = 60 - ((float)(bombpos.y+i) * 20);
         x = -90 + ((float)(bombpos.x) * 20);
-        bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
+        bomb->firenode[bomb->firenode.size()-1].node->setPosition(core::vector3df(x, y, 20));
             if (map[bombpos.y+i][bombpos.x] == 'D') {
             map[bombpos.y+i][bombpos.x] = ' ';
             destroyMapNode({bombpos.y+i, bombpos.x});
@@ -340,22 +339,13 @@ void GameScene::explosion(Bomb *bomb)
     }
     //fire left
     for (size_t i = 1; i < 3+bomb->getPlayer()->getBuff().FireUp && (int)(bombpos.x-i); i++) {
-        for (size_t j = 0; j < config.playerList.size(); j++) {
-            if(config.playerList[j]->getCoord().x == bombpos.x-i && config.playerList[j]->getCoord().y == bombpos.y) {
-                //player die
-                config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
-                config.playerList[j]->node->remove();
-                delete config.playerList[j];
-                config.playerList.erase(config.playerList.begin()+j);
-            }
-        }
         if (nonDestructible.find(map[bombpos.y][bombpos.x-i]) != std::string::npos) {
             break;
         }
-        bomb->firenode.push_back(config.smgr->addSphereSceneNode());
+        bomb->firenode.push_back({config.smgr->addSphereSceneNode(), {bombpos.y, bombpos.x-i}});
         y = 60 - ((float)(bombpos.y) * 20);
         x = -90 + ((float)(bombpos.x-i) * 20);
-        bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
+        bomb->firenode[bomb->firenode.size()-1].node->setPosition(core::vector3df(x, y, 20));
         if (map[bombpos.y][bombpos.x-i] == 'D') {
             map[bombpos.y][bombpos.x-i] = ' ';
             destroyMapNode({bombpos.y, bombpos.x-i});
@@ -366,22 +356,13 @@ void GameScene::explosion(Bomb *bomb)
     }
     //fire right             
     for (size_t i = 1; i < 3+bomb->getPlayer()->getBuff().FireUp && bombpos.x+i < map[bombpos.y].size(); i++) {
-        for (size_t j = 0; j < config.playerList.size(); j++) {
-            if(config.playerList[j]->getCoord().x == bombpos.x+i && config.playerList[j]->getCoord().y == bombpos.y) {
-                //player die
-                config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
-                config.playerList[j]->node->remove();
-                delete config.playerList[j];
-                config.playerList.erase(config.playerList.begin()+j);
-            }
-        }
         if (nonDestructible.find(map[bombpos.y][bombpos.x+i]) != std::string::npos) {
             break;
         }
-        bomb->firenode.push_back(config.smgr->addSphereSceneNode());
+        bomb->firenode.push_back({config.smgr->addSphereSceneNode(), {bombpos.y, bombpos.x+i}});
         y = 60 - ((float)(bombpos.y) * 20);
         x = -90 + ((float)(bombpos.x+i) * 20);
-        bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
+        bomb->firenode[bomb->firenode.size()-1].node->setPosition(core::vector3df(x, y, 20));
         if (map[bombpos.y][bombpos.x+i] == 'D') {
             map[bombpos.y][bombpos.x+i] = ' ';
             spawnPowerUp({bombpos.y, bombpos.x+i});
