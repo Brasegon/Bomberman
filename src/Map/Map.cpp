@@ -30,6 +30,51 @@ void Map::OpenMap(const std::string &path)
 	}
 }
 
+std::string Map::GenMap(int xLength, int yLength)
+{
+	int rand1 = rand() % 10000 + 1;
+	int rand2 = rand() % 10000 + 1;
+	int rand3 = rand() % 10000 + 1;
+	const std::string mapPath = "../assets/Map/map" + std::to_string(rand1) + std::to_string(rand2) + std::to_string(rand3) + ".txt";
+	std::ofstream output_file(mapPath);
+	std::vector<std::string> MapBuff;
+	int sizeMap = xLength * yLength;
+	int playerPosX = xLength - 1;
+	int playerPosY = xLength - 1;
+	for (size_t y = 0; y < yLength; y++) {
+		for (size_t x = 0; x < xLength; x++) {
+			int pos = rand() % 101;
+			if (x == 0 || x == xLength) {
+				MapBuff[x][y] = '#';
+			}
+			else if (y == 0 || y == yLength) {
+				MapBuff[x][y] = '#';
+			}
+			else if ((y == 1 && x == 1) || (y == 1 && x == playerPosX) || 
+				(y == playerPosY && x == 1) || (y == playerPosY && x == playerPosX)){
+				MapBuff[x][y] = 'P';
+			}
+			else 
+			{
+				if (pos > 1 && pos < 15) {
+					MapBuff[x][y] = 'E';
+				}
+				else if (pos > 15 && pos < 35) {
+					MapBuff[x][y] = 'X';
+				}
+				else if (pos < 35 && pos < 100) {
+					MapBuff[x][y] = 'D';
+				}
+			}
+			MapBuff[x][y] = '\n';
+		}
+	}
+	std::ostream_iterator<std::string> output_iterator(output_file, "\n");
+	std::copy(MapBuff.begin(), MapBuff.end(), output_iterator);
+	output_file.close();
+	return (mapPath);
+}
+
 void Map::LoadMap(scene::ISceneNode* n, std::vector<irr::scene::ISceneNode*> nodeList, Config& conf) {
 	Map m;
 	m.OpenMap("../assets/Map/map1.txt");
@@ -65,12 +110,6 @@ void Map::LoadMap(scene::ISceneNode* n, std::vector<irr::scene::ISceneNode*> nod
 					m.noDestruc = true;
 					n->setScale(core::vector3df(2, 2, 2));
 					n->setMaterialTexture(0, conf.driver->getTexture("../assets/Map/wallNoDestru.bmp"));
-					n->setMaterialFlag(video::EMF_LIGHTING, false);
-					n->setPosition(core::vector3df(xPos, yPos, 30));
-					break;
-				case 'U': // POWERUP
-					n->setScale(core::vector3df(2, 2, 2));
-					n->setMaterialTexture(0, conf.driver->getTexture("../assets/Map/tile.bmp"));
 					n->setMaterialFlag(video::EMF_LIGHTING, false);
 					n->setPosition(core::vector3df(xPos, yPos, 30));
 					break;
