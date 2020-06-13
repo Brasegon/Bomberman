@@ -9,6 +9,7 @@
 
 GameScene::GameScene(Config &conf) : AScene(conf)
 {
+    srand(time(0));
     config.smgr = config.device->getSceneManager();
     config.guienv = config.device->getGUIEnvironment();
     if (config.newGame) {
@@ -126,9 +127,9 @@ void GameScene::setMap(std::vector<std::string> setmap)
 
 void GameScene::updateGame()
 {
-    for (size_t i = 0; i < map.size(); i++) {
-        for (size_t j = 0; j < map[i].size(); j++) {
-
+    for (size_t i = 0; i < mapnode.size(); i++) {
+        if (mapnode[i].isDestructible) {
+            map[mapnode[i].coord.y][mapnode[i].coord.x] = 'D';
         }
     }
     for (size_t i = 0; i < config.playerList.size(); i++) {
@@ -148,79 +149,76 @@ void GameScene::updateGame()
             for (size_t j = 0; j < bombList[i]->firenode.size(); j++) {
                 bombList[i]->firenode[j]->remove();
             }
+            delete bombList[i];
             bombList.erase(bombList.begin()+i);
+        }
+    }
+    for (size_t i = 0; i < powerupList.size(); i++) {
+        if (powerupList[i]->isDespawn()) {
+            powerupList[i]->node->remove();
+            delete powerupList[i];
+            powerupList.erase(powerupList.begin()+i);
+        }
+        for (size_t j = 0; j < config.playerList.size(); j++) {
+            if (config.playerList[j]->getCoord() == powerupList[i]->getCoord()) {
+                config.playerList[j]->addBuff(powerupList[i]->getType());
+                powerupList[i]->node->remove();
+                delete powerupList[i];
+                powerupList.erase(powerupList.begin()+i);
+            }
         }
     }
 }
 
 void GameScene::playerAction(Player *player)
 {
-    std::stringstream sstr;
-    sstr << std::endl;
     core::vector3df nodePosition = player->node->getPosition();
     if (config.event->IsKeyDown(player->getKeys().up)) {
         playerUp(player);
         nodePosition.Y = 60 - ((float)(player->getCoord().y) * 20);
         player->node->setPosition(nodePosition);
-        // // for (size_t i = 0; i < map.size(); i++) {
-        // //     sstr << map[i] << std::endl;
-        // // }
-        // sstr << std::endl;
-        // config.log.printInfo(sstr.str());
     }
     if (config.event->IsKeyDown(player->getKeys().down)) {
         playerDown(player);
         nodePosition.Y = 60 - ((float)(player->getCoord().y) * 20);
         player->node->setPosition(nodePosition);
-        // for (size_t i = 0; i < map.size(); i++) {
-        //     sstr << map[i] << std::endl;
-        // }
-        // sstr << std::endl;
-        // config.log.printInfo(sstr.str());
     }
     if (config.event->IsKeyDown(player->getKeys().left)) {
         playerLeft(player);
         nodePosition.X = -90 + ((float)(player->getCoord().x) * 20);
         player->node->setPosition(nodePosition);
-        // for (size_t i = 0; i < map.size(); i++) {
-        //     sstr << map[i] << std::endl;
-        // }
-        // sstr << std::endl;
-        // config.log.printInfo(sstr.str());
     }
     if (config.event->IsKeyDown(player->getKeys().right)) {
         playerRight(player);
         nodePosition.X = -90 + ((float)(player->getCoord().x) * 20);
         player->node->setPosition(nodePosition);
-        // for (size_t i = 0; i < map.size(); i++) {
-        //     sstr << map[i] << std::endl;
-        // }
-        // sstr << std::endl;
-        // config.log.printInfo(sstr.str());
     }
     if (config.event->IsKeyDown(player->getKeys().drop)) {
         playerDrop(player);
     }
 }
 
-bool GameScene::isWalkable(coord2d_t coord)
+bool GameScene::isWalkable(coord2d_t coord, bool wallpass)
 {
-    std::string nonWalkable = "XD#P";
+    std::string nonWalkable = "X#P";
 
-    if (nonWalkable.find(map[coord.y][coord.x]) != std::string::npos) {
-        return false;
+    if (!wallpass) {
+        nonWalkable+="D";
     }
     for (size_t i = 0; i < bombList.size(); i++) {
         if (bombList[i]->getCoord() == coord) {
             return false;
         }
     }
+    if (nonWalkable.find(map[coord.y][coord.x]) != std::string::npos) {
+        return false;
+    }
     return true;
 }
 
 void GameScene::playerUp(Player *player)
 {
-    if (isWalkable({player->getCoord().y-1, player->getCoord().x}) && player->MoveClock()) {
+    if (isWalkable({player->getCoord().y-1, player->getCoord().x}, player->getBuff().WallPass) && player->MoveClock()) {
         //playerAnimationUp
         map[player->getCoord().y][player->getCoord().x] = ' ';
         player->setCoord({player->getCoord().y-1, player->getCoord().x});
@@ -230,7 +228,7 @@ void GameScene::playerUp(Player *player)
 
 void GameScene::playerDown(Player *player)
 {
-    if (isWalkable({player->getCoord().y+1, player->getCoord().x}) && player->MoveClock()) {
+    if (isWalkable({player->getCoord().y+1, player->getCoord().x}, player->getBuff().WallPass) && player->MoveClock()) {
         //playerAnimationDown
         map[player->getCoord().y][player->getCoord().x] = ' ';
         player->setCoord({player->getCoord().y+1, player->getCoord().x});
@@ -240,7 +238,7 @@ void GameScene::playerDown(Player *player)
 
 void GameScene::playerLeft(Player *player)
 {
-    if (isWalkable({player->getCoord().y, player->getCoord().x-1}) && player->MoveClock()) {
+    if (isWalkable({player->getCoord().y, player->getCoord().x-1}, player->getBuff().WallPass) && player->MoveClock()) {
         //playerAnimationLeft
         map[player->getCoord().y][player->getCoord().x] = ' ';
         player->setCoord({player->getCoord().y, player->getCoord().x-1});
@@ -250,7 +248,7 @@ void GameScene::playerLeft(Player *player)
 
 void GameScene::playerRight(Player *player)
 {
-    if (isWalkable({player->getCoord().y, player->getCoord().x+1}) && player->MoveClock()) {
+    if (isWalkable({player->getCoord().y, player->getCoord().x+1}, player->getBuff().WallPass) && player->MoveClock()) {
         //playerAnimationRight
         map[player->getCoord().y][player->getCoord().x] = ' ';
         player->setCoord({player->getCoord().y, player->getCoord().x+1});
@@ -262,7 +260,10 @@ void GameScene::playerDrop(Player *player)
 {
     size_t count = 0;
     for (size_t i = 0; i < bombList.size(); i++) {
-        if (bombList[i]->getPlayer() == player) {
+        if (bombList[i]->getCoord() == player->getCoord()) {
+            return;
+        }
+        if (bombList[i]->getPlayer() == player && !bombList[i]->isExploded()) {
             count++;
         }
     }
@@ -292,6 +293,7 @@ void GameScene::explosion(Bomb *bomb)
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
                 config.playerList[j]->node->remove();
+                delete config.playerList[j];
                 config.playerList.erase(config.playerList.begin()+j);
             }
         }
@@ -305,6 +307,7 @@ void GameScene::explosion(Bomb *bomb)
         if (map[bombpos.y-i][bombpos.x] == 'D') {
             map[bombpos.y-i][bombpos.x] = ' ';
             destroyMapNode({bombpos.y-i, bombpos.x});
+            spawnPowerUp({bombpos.y-i, bombpos.x});
             break;
         }
         map[bombpos.y-i][bombpos.x] = ' ';
@@ -316,6 +319,7 @@ void GameScene::explosion(Bomb *bomb)
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
                 config.playerList[j]->node->remove();
+                delete config.playerList[j];
                 config.playerList.erase(config.playerList.begin()+j);
             }
         }
@@ -329,6 +333,7 @@ void GameScene::explosion(Bomb *bomb)
             if (map[bombpos.y+i][bombpos.x] == 'D') {
             map[bombpos.y+i][bombpos.x] = ' ';
             destroyMapNode({bombpos.y+i, bombpos.x});
+            spawnPowerUp({bombpos.y+i, bombpos.x});
             break;
         }
         map[bombpos.y+i][bombpos.x] = ' ';
@@ -340,6 +345,7 @@ void GameScene::explosion(Bomb *bomb)
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
                 config.playerList[j]->node->remove();
+                delete config.playerList[j];
                 config.playerList.erase(config.playerList.begin()+j);
             }
         }
@@ -353,6 +359,7 @@ void GameScene::explosion(Bomb *bomb)
         if (map[bombpos.y][bombpos.x-i] == 'D') {
             map[bombpos.y][bombpos.x-i] = ' ';
             destroyMapNode({bombpos.y, bombpos.x-i});
+            spawnPowerUp({bombpos.y, bombpos.x-i});
             break;
         }
         map[bombpos.y][bombpos.x-i] = ' ';
@@ -364,6 +371,7 @@ void GameScene::explosion(Bomb *bomb)
                 //player die
                 config.log.printInfo(config.playerList[j]->getPlayerName()+" killed by "+bomb->getPlayer()->getPlayerName());
                 config.playerList[j]->node->remove();
+                delete config.playerList[j];
                 config.playerList.erase(config.playerList.begin()+j);
             }
         }
@@ -376,17 +384,60 @@ void GameScene::explosion(Bomb *bomb)
         bomb->firenode[bomb->firenode.size()-1]->setPosition(core::vector3df(x, y, 20));
         if (map[bombpos.y][bombpos.x+i] == 'D') {
             map[bombpos.y][bombpos.x+i] = ' ';
+            spawnPowerUp({bombpos.y, bombpos.x+i});
             destroyMapNode({bombpos.y, bombpos.x+i});
             break;
         }
         map[bombpos.y][bombpos.x+i] = ' ';
     }
 }
+
 void GameScene::destroyMapNode(coord2d_t coord)
 {
     for (size_t i = 0; i < mapnode.size(); i++) {
         if (mapnode[i].coord == coord && mapnode[i].isDestructible) {
             mapnode[i].node->remove();
+            mapnode.erase(mapnode.begin()+i);
         }
     }
+}
+
+void GameScene::spawnPowerUp(coord2d_t coord)
+{
+    PowerUp *powup = new PowerUp();
+    int r = rand()%4;
+    
+    if (rand()%2 == 0) {
+        delete powup;
+        return;
+    }
+    powup->setCoord(coord);
+    powup->node = config.smgr->addCubeSceneNode();
+    float y = 60 - ((float)(coord.y) * 20);
+    float x = -90 + ((float)(coord.x) * 20);
+    powup->node->setPosition(core::vector3df(x, y, 30));
+    powup->node->setScale(core::vector3df(1.5, 1.5, 1.5));
+    powup->node->setMaterialFlag(video::EMF_LIGHTING, true);
+    switch (r)
+    {
+    case 0:
+        powup->setType(BOMBUP);
+        powup->node->setMaterialTexture(0, config.driver->getTexture("assets/textures/Bomb_Up.png"));
+        break;
+    case 1:
+        powup->setType(FIREUP);
+        powup->node->setMaterialTexture(0, config.driver->getTexture("assets/textures/Fire_Up.png"));
+        break;
+    case 2:
+        powup->setType(SPEEDUP);
+        powup->node->setMaterialTexture(0, config.driver->getTexture("assets/textures/Speed_Up.png"));
+        break;
+    case 3:
+        powup->setType(WALLPASS);
+        powup->node->setMaterialTexture(0, config.driver->getTexture("assets/textures/Wall_Pass.png"));
+        break;
+    default:
+        break;
+    }
+    powerupList.push_back(powup);
 }

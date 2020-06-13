@@ -76,7 +76,7 @@ bool Player::MoveClock() {
     return false;
 }
 
-playerBuff_t Player::getBuff()
+const playerBuff_t &Player::getBuff() const
 {
     return buff;
 }
@@ -102,7 +102,23 @@ void Player::addBuffSpeedUp()
 
 void Player::addBuffWallPass()
 {
+    buff.WallPass = true;
+}
 
+void Player::addBuff(PowerUpType type)
+{
+    if (type == BOMBUP) {
+        addBuffBombUp();
+    }
+    if (type == FIREUP) {
+        addBuffFireUp();
+    }
+    if (type == SPEEDUP) {
+        addBuffSpeedUp();
+    }
+    if (type == WALLPASS) {
+        addBuffWallPass();
+    }
 }
 
 Player::~Player()

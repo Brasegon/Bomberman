@@ -71,6 +71,8 @@ add_executable(bomberman
                 src/Game/GameScene.hpp
                 src/Game/Bomb.cpp
                 src/Game/Bomb.hpp
+                src/Game/PowerUp.cpp
+                src/Game/PowerUp.hpp
                 src/my.hpp
                 src/main.cpp)
 

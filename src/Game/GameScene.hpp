@@ -12,6 +12,7 @@
 #include "../Event/Event.hpp"
 #include "Bomb.hpp"
 #include "../Save/Save.hpp"
+#include "PowerUp.hpp"
 
 typedef struct MapNode_s {
     irr::scene::ISceneNode * node;
@@ -36,14 +37,16 @@ class GameScene : public AScene {
         void playerRight(Player *player);
         void playerDrop(Player *player);
         void explosion(Bomb *bomb);
-        bool isWalkable(coord2d_t coord);
+        bool isWalkable(coord2d_t coord, bool wallpass);
         void destroyMapNode(coord2d_t coord);
+        void spawnPowerUp(coord2d_t coord);
 
     private:
         std::vector<MapNode_t> mapnode;
         std::vector<std::string> map;
         scene::ISceneNode *node;
         std::vector<Bomb *> bombList;
+        std::vector<PowerUp *> powerupList;
         Save save;
 };
 

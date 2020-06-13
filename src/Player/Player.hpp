@@ -39,6 +39,15 @@ typedef struct keybind_s {
     irr::EKEY_CODE drop;
 } keybind_t;
 
+
+enum PowerUpType
+{
+    BOMBUP,
+    FIREUP,
+    SPEEDUP,
+    WALLPASS,
+};
+
 class Player {
     public:
         Player(const std::string &name, bool bot, size_t nb);
@@ -51,11 +60,12 @@ class Player {
         void setCoord(coord2d_t pos);
         irr::scene::ISceneNode *node;
         bool MoveClock();
-        playerBuff_t getBuff();
+        const playerBuff_t &getBuff() const;
         void addBuffBombUp();
         void addBuffFireUp();
         void addBuffSpeedUp();
         void addBuffWallPass();
+        void addBuff(PowerUpType);
         ~Player();
 
     protected:
