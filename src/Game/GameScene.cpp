@@ -131,6 +131,9 @@ void GameScene::updateGame()
     for (size_t i = 0; i < config.playerList.size(); i++) {
         if (!config.playerList[i]->getIsBot()) {
             playerAction(config.playerList[i]);
+        } else {
+            std::cout << i << std::endl;
+            iaAction(config.playerList[i]);
         }
     }
     //check destructible node
@@ -184,6 +187,35 @@ void GameScene::updateGame()
                 powerupList.erase(powerupList.begin()+i);
             }
         }
+    }
+}
+
+void GameScene::iaAction(Player *player)
+{
+    //valeur random
+    srand((unsigned) time(0));
+    int randomNumber = (rand() % 4) + 1;
+    std::cout << randomNumber << std::endl;
+    core::vector3df nodePosition = player->node->getPosition();
+    if (randomNumber == 1) {
+        playerUp(player);
+        nodePosition.Y = 60 - ((float)(player->getCoord().y) * 20);
+        player->node->setPosition(nodePosition);
+    }
+    if (randomNumber == 2) {
+        playerDown(player);
+        nodePosition.Y = 60 - ((float)(player->getCoord().y) * 20);
+        player->node->setPosition(nodePosition);
+    }
+    if (randomNumber == 3) {
+        playerLeft(player);
+        nodePosition.X = -90 + ((float)(player->getCoord().x) * 20);
+        player->node->setPosition(nodePosition);
+    }
+    if (randomNumber == 4) {
+        playerRight(player);
+        nodePosition.X = -90 + ((float)(player->getCoord().x) * 20);
+        player->node->setPosition(nodePosition);
     }
 }
 
