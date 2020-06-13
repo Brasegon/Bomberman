@@ -41,6 +41,9 @@ void Engine::selectScene(Config &conf, SceneType sceneId)
     case GAME:
         _scene = new GameScene(conf);
         break;
+    case END:
+        _scene = new End(conf);
+        break;
     default:
         break;
     }

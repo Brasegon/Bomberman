@@ -28,6 +28,7 @@ enum SceneType {
     MAIN_MENU,
     MAIN_SELECTION,
     GAME,
+    END,
 };
 
 using ChangeScene = std::pair<bool, SceneType>;

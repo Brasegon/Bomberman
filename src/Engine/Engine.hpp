@@ -14,6 +14,7 @@
 #include "../Game/GameScene.hpp"
 #include "../Menu/Scene/SceneIntro.hpp"
 #include "../Menu/Scene/MenuSelection.hpp"
+#include "../Menu/Scene/End.hpp"
 using namespace irr;
 using namespace core;
 using namespace scene;

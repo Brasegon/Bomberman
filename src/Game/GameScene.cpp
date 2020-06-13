@@ -107,6 +107,8 @@ ChangeScene GameScene::update()
         config.log.printInfo("Reset Camera");
         config.smgr->getActiveCamera()->setRotation(vector3df(0, 0, 0));
         config.smgr->getActiveCamera()->setPosition(vector3df(0, 45, -300));
+    } if (config.playerList.size() < 2) {
+        return {true, END};
     }
     updateGame();
     return {false, NONE};
