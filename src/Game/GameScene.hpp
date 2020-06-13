@@ -37,6 +37,7 @@ class GameScene : public AScene {
         void playerLeft(Player *player);
         void playerRight(Player *player);
         void playerDrop(Player *player);
+        irr::scene::ISceneNode *newFireNode();
         void explosion(Bomb *bomb);
         bool isWalkable(coord2d_t coord, bool wallpass);
         void destroyMapNode(coord2d_t coord);

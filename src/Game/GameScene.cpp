@@ -328,6 +328,16 @@ void GameScene::playerDrop(Player *player)
     }
 }
 
+irr::scene::ISceneNode *GameScene::newFireNode() {
+    ISceneNode *node;
+
+    node = config.smgr->addCubeSceneNode();
+    node->setScale(vector3df(1.8,1.8,1.8));
+    node->setMaterialFlag(video::EMF_LIGHTING, true);
+    node->setMaterialTexture(0, config.driver->getTexture("assets/textures/fire.jpg"));
+    return node;
+}
+
 void GameScene::explosion(Bomb *bomb)
 {
     std::string nonDestructible = "X#";
@@ -340,7 +350,7 @@ void GameScene::explosion(Bomb *bomb)
         if (nonDestructible.find(map[bombpos.y-i][bombpos.x]) != std::string::npos) {
             break;
         }
-        bomb->firenode.push_back({config.smgr->addSphereSceneNode(), {bombpos.y-i, bombpos.x}});
+        bomb->firenode.push_back({newFireNode(), {bombpos.y-i, bombpos.x}});
         y = 60 - ((float)(bombpos.y-i) * 20);
         x = -90 + ((float)(bombpos.x) * 20);
         bomb->firenode[bomb->firenode.size()-1].node->setPosition(core::vector3df(x, y, 20));
@@ -357,7 +367,7 @@ void GameScene::explosion(Bomb *bomb)
         if (nonDestructible.find(map[bombpos.y+i][bombpos.x]) != std::string::npos) {
             break;
         }
-        bomb->firenode.push_back({config.smgr->addSphereSceneNode(), {bombpos.y+i, bombpos.x}});
+        bomb->firenode.push_back({newFireNode(), {bombpos.y+i, bombpos.x}});
         y = 60 - ((float)(bombpos.y+i) * 20);
         x = -90 + ((float)(bombpos.x) * 20);
         bomb->firenode[bomb->firenode.size()-1].node->setPosition(core::vector3df(x, y, 20));
@@ -374,7 +384,7 @@ void GameScene::explosion(Bomb *bomb)
         if (nonDestructible.find(map[bombpos.y][bombpos.x-i]) != std::string::npos) {
             break;
         }
-        bomb->firenode.push_back({config.smgr->addSphereSceneNode(), {bombpos.y, bombpos.x-i}});
+        bomb->firenode.push_back({newFireNode(), {bombpos.y, bombpos.x-i}});
         y = 60 - ((float)(bombpos.y) * 20);
         x = -90 + ((float)(bombpos.x-i) * 20);
         bomb->firenode[bomb->firenode.size()-1].node->setPosition(core::vector3df(x, y, 20));
@@ -391,7 +401,7 @@ void GameScene::explosion(Bomb *bomb)
         if (nonDestructible.find(map[bombpos.y][bombpos.x+i]) != std::string::npos) {
             break;
         }
-        bomb->firenode.push_back({config.smgr->addSphereSceneNode(), {bombpos.y, bombpos.x+i}});
+        bomb->firenode.push_back({newFireNode(), {bombpos.y, bombpos.x+i}});
         y = 60 - ((float)(bombpos.y) * 20);
         x = -90 + ((float)(bombpos.x+i) * 20);
         bomb->firenode[bomb->firenode.size()-1].node->setPosition(core::vector3df(x, y, 20));
