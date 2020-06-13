@@ -30,7 +30,7 @@ void Map::OpenMap(const std::string &path)
 	}
 }
 
-std::string Map::GenMap(int xLength, int yLength)
+std::string Map::GenMap(size_t xLength, size_t yLength)
 {
 	int rand1 = rand() % 10000 + 1;
 	int rand2 = rand() % 10000 + 1;
@@ -39,8 +39,8 @@ std::string Map::GenMap(int xLength, int yLength)
 	std::ofstream output_file(mapPath);
 	std::vector<std::string> MapBuff;
 	int sizeMap = xLength * yLength;
-	int playerPosX = xLength - 1;
-	int playerPosY = xLength - 1;
+	size_t playerPosX = xLength - 1;
+	size_t playerPosY = xLength - 1;
 	for (size_t y = 0; y < yLength; y++) {
 		for (size_t x = 0; x < xLength; x++) {
 			int pos = rand() % 101;

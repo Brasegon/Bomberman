@@ -18,7 +18,7 @@ public:
 	~Map();
 	void OpenMap(const std::string &path);
 	void LoadMap(scene::ISceneNode* n, std::vector<irr::scene::ISceneNode*> nodeList, Config& conf);
-	std::string GenMap(int xLength, int yLength);
+	std::string GenMap(size_t xLength, size_t yLength);
 private:
 protected:
 	bool noDestruc = false;

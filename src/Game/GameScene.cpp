@@ -159,6 +159,7 @@ void GameScene::updateGame()
                 if (bombList[i]->firenode[j].coord == config.playerList[k]->getCoord()) {
                     config.log.printInfo(config.playerList[k]->getPlayerName()+" killed by "+bombList[i]->getPlayer()->getPlayerName());
                     config.playerList[k]->node->remove();
+                    map[config.playerList[k]->getCoord().y][config.playerList[k]->getCoord().x] = ' ';
                     delete config.playerList[k];
                     config.playerList.erase(config.playerList.begin()+k);
                 }
@@ -317,6 +318,10 @@ void GameScene::playerDrop(Player *player)
         if (bombList[i]->getPlayer() == player && !bombList[i]->isExploded()) {
             count++;
         }
+    }
+    for (size_t i = 0; i < mapnode.size(); i++) {
+        if (player->getCoord() == mapnode[i].coord && mapnode[i].isDestructible)
+            return;
     }
     if (count < 1+player->getBuff().BombUp) {
         bombList.push_back(new Bomb(player));
