@@ -31,6 +31,7 @@ class GameScene : public AScene {
         void setMap(std::vector<std::string> map);
         void updateGame();
         void playerAction(Player *player);
+        void iaAction(Player *player);
         void playerUp(Player *player);
         void playerDown(Player *player);
         void playerLeft(Player *player);
