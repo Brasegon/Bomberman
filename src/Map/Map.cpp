@@ -33,16 +33,12 @@ void Map::OpenMap(const std::string &path)
 
 std::vector<std::string> Map::GenMap(int xLength, int yLength)
 {
-	int rand1 = rand() % 10000 + 1;
-	int rand2 = rand() % 10000 + 1;
-	int rand3 = rand() % 10000 + 1;
 	std::vector<std::string> MapBuff;
-	int sizeMap = xLength * yLength;
 	int playerPosX = xLength - 2;
 	int playerPosY = yLength - 2;
-	for (size_t y = 0; y < yLength; y++) {
+	for (int y = 0; y < yLength; y++) {
 		std::string map;
-		for (size_t x = 0; x < xLength; x++) {
+		for (int x = 0; x < xLength; x++) {
 			int pos = rand() % 101;
 			if (x == 0 || x == xLength - 1) {
 				map.push_back('#');
@@ -69,6 +65,14 @@ std::vector<std::string> Map::GenMap(int xLength, int yLength)
 		}
 		MapBuff.push_back(map);
 	}
+	MapBuff[1][2] = ' ';
+	MapBuff[2][1] = ' ';
+	MapBuff[1][playerPosY-1] = ' ';
+	MapBuff[2][playerPosY] = ' ';
+	MapBuff[playerPosX-1][1] = ' ';
+	MapBuff[playerPosX][2] = ' ';
+	MapBuff[playerPosX-1][playerPosY] = ' ';
+	MapBuff[playerPosX][playerPosY-1] = ' ';
 	for(size_t i = 0; i < MapBuff.size(); i += 1) {
 		std::cout << MapBuff[i] << std::endl;
 	}
