@@ -10,6 +10,7 @@
 
 #include "../Menu/AScene.hpp"
 #include "../Event/Event.hpp"
+#include "../Map/Map.hpp"
 #include "Bomb.hpp"
 #include "../Save/Save.hpp"
 #include "PowerUp.hpp"
