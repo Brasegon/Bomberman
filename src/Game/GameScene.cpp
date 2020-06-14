@@ -7,6 +7,13 @@
 
 #include "GameScene.hpp"
 
+static SColor pcolor[4] = {
+    SColor(0, 0, 255, 0),
+    SColor(0, 0, 0, 255),
+    SColor(0, 255, 0, 255),
+    SColor(0, 255, 255, 0),
+};
+
 GameScene::GameScene(Config &conf) : AScene(conf)
 {
     srand(time(0));
@@ -70,7 +77,9 @@ GameScene::GameScene(Config &conf) : AScene(conf)
             config.playerList[i]->initCoord(map);       
         }
         config.log.printInfo("Player"+std::to_string(i)+" position{"+std::to_string(config.playerList[i]->getCoord().y)+" , "+std::to_string(config.playerList[i]->getCoord().x)+"}");
-        config.playerList[i]->node = config.smgr->addSphereSceneNode();
+        IMeshSceneNode * mesh = config.smgr->addSphereSceneNode();
+        config.smgr->getMeshManipulator()->setVertexColors(mesh->getMesh(), pcolor[i]);
+        config.playerList[i]->node = mesh;
         if (config.playerList[i]->node) {
             float y = 60 - ((float)(config.playerList[i]->getCoord().y) * 20);
             float x = -90 + ((float)(config.playerList[i]->getCoord().x) * 20);
@@ -81,7 +90,7 @@ GameScene::GameScene(Config &conf) : AScene(conf)
     }
 
     // config.smgr->addCameraSceneNodeFPS(0, 3, 1, -1, 0, 0/*, true*/);
-    config.smgr->addCameraSceneNode(0, vector3df(0, 0, -300), vector3df(0, 0, 0));
+    config.smgr->addCameraSceneNode(0, vector3df(20, -100, -250), vector3df(20, -100, 0));
 }
 
 GameScene::~GameScene()
@@ -103,11 +112,18 @@ ChangeScene GameScene::update()
     if (config.event->IsKeyDown(KEY_ESCAPE)) {
         return {true, MAIN_MENU};
     }
-    if (config.event->IsKeyDown(KEY_SPACE)) {
-        config.log.printInfo("Reset Camera");
-        config.smgr->getActiveCamera()->setRotation(vector3df(0, 0, 0));
-        config.smgr->getActiveCamera()->setPosition(vector3df(0, 45, -300));
-    } if (config.playerList.size() < 2) {
+    // if (config.event->IsKeyDown(KEY_SPACE)) {
+    //     config.log.printInfo("Reset Camera");
+    //     config.smgr->getActiveCamera()->setRotation(vector3df(20, -100, 0));
+    //     config.smgr->getActiveCamera()->setPosition(vector3df(20, -100, -250));
+    // }
+    size_t count = 0;
+    for (size_t i = 0; i < config.playerList.size(); i++) {
+        if (!config.playerList[i]->getIsBot()) {
+            count++;
+        }
+    }
+    if (config.playerList.size() <= 1 || count == 0) {
         return {true, END};
     }
     updateGame();
@@ -134,7 +150,6 @@ void GameScene::updateGame()
         if (!config.playerList[i]->getIsBot()) {
             playerAction(config.playerList[i]);
         } else {
-            std::cout << i << std::endl;
             iaAction(config.playerList[i]);
         }
     }
@@ -198,7 +213,6 @@ void GameScene::iaAction(Player *player)
     //valeur random
     srand((unsigned) time(0));
     int randomNumber = (rand() % 4) + 1;
-    std::cout << randomNumber << std::endl;
     core::vector3df nodePosition = player->node->getPosition();
     if (randomNumber == 1) {
         playerUp(player);
