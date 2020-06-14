@@ -20,25 +20,27 @@ GameScene::GameScene(Config &conf) : AScene(conf)
     config.smgr = config.device->getSceneManager();
     config.guienv = config.device->getGUIEnvironment();
     if (config.newGame) {
-        map = {
-            "###############",
-            "#P DD     DD P#",
-            "# XXXXX XXXXX #",
-            "#DX   D D   XD#",
-            "#DX XXX XXX XD#",
-            "#   DD   DD   #",
-            "#XXXX XXX XXXX#",
-            "# D    X    D #",
-            "# XXXXXXXXXXX #",
-            "# D    X    D #",
-            "#XXXX XXX XXXX#",
-            "#   DD   DD   #",
-            "#DX XXX XXX XD#",
-            "#DX   D D   XD#",
-            "# XXXXX XXXXX #",
-            "#P DD     DD P#",
-            "###############",
-        };
+        Map mapGen;
+        map = mapGen.GenMap(16, 16);
+        // map = {
+        //     "###############",
+        //     "#P DD     DD P#",
+        //     "# XXXXX XXXXX #",
+        //     "#DX   D D   XD#",
+        //     "#DX XXX XXX XD#",
+        //     "#   DD   DD   #",
+        //     "#XXXX XXX XXXX#",
+        //     "# D    X    D #",
+        //     "# XXXXXXXXXXX #",
+        //     "# D    X    D #",
+        //     "#XXXX XXX XXXX#",
+        //     "#   DD   DD   #",
+        //     "#DX XXX XXX XD#",
+        //     "#DX   D D   XD#",
+        //     "# XXXXX XXXXX #",
+        //     "#P DD     DD P#",
+        //     "###############",
+        // };
     } else {
         config.playerList = save.getPlayerSave();
         map = save.getMap();

@@ -7,7 +7,7 @@
 
 #include "Map.hpp"
 #include <exception>
-
+#include "../Save/Save.hpp"
 
 Map::Map(){}
 
@@ -30,49 +30,50 @@ void Map::OpenMap(const std::string &path)
 	}
 }
 
-std::string Map::GenMap(size_t xLength, size_t yLength)
+
+std::vector<std::string> Map::GenMap(int xLength, int yLength)
 {
 	int rand1 = rand() % 10000 + 1;
 	int rand2 = rand() % 10000 + 1;
 	int rand3 = rand() % 10000 + 1;
-	const std::string mapPath = "../assets/Map/map" + std::to_string(rand1) + std::to_string(rand2) + std::to_string(rand3) + ".txt";
-	std::ofstream output_file(mapPath);
 	std::vector<std::string> MapBuff;
 	int sizeMap = xLength * yLength;
-	size_t playerPosX = xLength - 1;
-	size_t playerPosY = xLength - 1;
+	int playerPosX = xLength - 2;
+	int playerPosY = yLength - 2;
 	for (size_t y = 0; y < yLength; y++) {
+		std::string map;
 		for (size_t x = 0; x < xLength; x++) {
 			int pos = rand() % 101;
-			if (x == 0 || x == xLength) {
-				MapBuff[x][y] = '#';
+			if (x == 0 || x == xLength - 1) {
+				map.push_back('#');
 			}
-			else if (y == 0 || y == yLength) {
-				MapBuff[x][y] = '#';
+			else if (y == 0 || y == yLength - 1) {
+				map.push_back('#');
 			}
 			else if ((y == 1 && x == 1) || (y == 1 && x == playerPosX) || 
 				(y == playerPosY && x == 1) || (y == playerPosY && x == playerPosX)){
-				MapBuff[x][y] = 'P';
+				map.push_back('P');
 			}
 			else 
 			{
-				if (pos > 1 && pos < 15) {
-					MapBuff[x][y] = 'E';
+				if (pos >= 1 && pos < 60) {
+					map.push_back(' ');
 				}
-				else if (pos > 15 && pos < 35) {
-					MapBuff[x][y] = 'X';
+				else if (pos >= 60 && pos < 75) {
+					map.push_back('X');
 				}
-				else if (pos < 35 && pos < 100) {
-					MapBuff[x][y] = 'D';
+				else if (pos >= 75 && pos <= 100) {
+					map.push_back('D');
 				}
 			}
-			MapBuff[x][y] = '\n';
 		}
+		MapBuff.push_back(map);
 	}
-	std::ostream_iterator<std::string> output_iterator(output_file, "\n");
-	std::copy(MapBuff.begin(), MapBuff.end(), output_iterator);
-	output_file.close();
-	return (mapPath);
+	for(size_t i = 0; i < MapBuff.size(); i += 1) {
+		std::cout << MapBuff[i] << std::endl;
+	}
+	// while(1);
+	return (MapBuff);
 }
 
 void Map::LoadMap(scene::ISceneNode* n, std::vector<irr::scene::ISceneNode*> nodeList, Config& conf) {
