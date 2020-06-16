@@ -90,7 +90,13 @@ GameScene::GameScene(Config &conf) : AScene(conf)
             config.playerList[i]->node->setMaterialFlag(video::EMF_LIGHTING, true);
         }
     }
-
+    config.setting.music = new sf::Music();
+    if (!config.setting.music->openFromFile("assets/musicGame.ogg")) {
+        exit(84);
+    }
+    config.setting.music->setVolume(10);
+    config.setting.music->setLoop(true);
+    config.setting.music->play();
     // config.smgr->addCameraSceneNodeFPS(0, 3, 1, -1, 0, 0/*, true*/);
     config.smgr->addCameraSceneNode(0, vector3df(20, -100, -250), vector3df(20, -100, 0));
 }
@@ -98,6 +104,7 @@ GameScene::GameScene(Config &conf) : AScene(conf)
 GameScene::~GameScene()
 {
     save.saveMap(map, config);
+    config.setting.music->stop();
     config.smgr->clear();
     config.guienv->clear();
     config.driver->clearZBuffer();
@@ -341,11 +348,12 @@ void GameScene::playerDrop(Player *player)
     }
     if (count < 1+player->getBuff().BombUp) {
         bombList.push_back(new Bomb(player));
+        bombList[bombList.size()-1]->playSound();
         bombList[bombList.size()-1]->node = config.smgr->addAnimatedMeshSceneNode(config.smgr->getMesh("assets/Bomb.md2"));
         float y = 60 - ((float)(bombList[bombList.size()-1]->getCoord().y) * 20);
         float x = -90 + ((float)(bombList[bombList.size()-1]->getCoord().x) * 20);
         bombList[bombList.size()-1]->node->setPosition(core::vector3df(x, y, 20));
-        bombList[bombList.size()-1]->node->setScale(core::vector3df(0.05, 0.05, 0.05));
+        bombList[bombList.size()-1]->node->setScale(core::vector3df(0.025, 0.025, 0.025));
         bombList[bombList.size()-1]->node->setMaterialFlag(video::EMF_LIGHTING, true);
         bombList[bombList.size()-1]->node->setMaterialTexture(0, config.driver->getTexture("assets/textures/redtexture.jpg"));
     }

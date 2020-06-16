@@ -26,6 +26,7 @@ class Bomb {
         bool isExplosionEnd();
         irr::scene::IAnimatedMeshSceneNode *node;
         std::vector<fire_t> firenode;
+        void Bomb::playSound();
 
     private:
         Player *player;
