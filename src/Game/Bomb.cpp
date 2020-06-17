@@ -32,8 +32,8 @@ void Bomb::playSound()
     sf::SoundBuffer *buffer = new sf::SoundBuffer();
     sf::Sound *sound = new sf::Sound();
 
-    if (buffer->loadFromFile("./assets/boom.ogg"));
-        // exit(84);
+    // if (buffer->loadFromFile("./assets/boom.ogg"))
+    //     exit(84);
     sound->setBuffer(*buffer);
     sound->play();
 }
