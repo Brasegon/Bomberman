@@ -65,14 +65,14 @@ std::vector<std::string> Map::GenMap(int xLength, int yLength)
 		}
 		MapBuff.push_back(map);
 	}
-	// MapBuff[1][2] = ' ';
-	// MapBuff[2][1] = ' ';
-	// MapBuff[1][playerPosY-1] = ' ';
-	// MapBuff[2][playerPosY] = ' ';
-	// MapBuff[playerPosX-1][1] = ' ';
-	// MapBuff[playerPosX][2] = ' ';
-	// MapBuff[playerPosX-1][playerPosY] = ' ';
-	// MapBuff[playerPosX][playerPosY-1] = ' ';
+	MapBuff[1][2] = ' ';
+	MapBuff[2][1] = ' ';
+	MapBuff[1][playerPosY-1] = ' ';
+	MapBuff[2][playerPosY] = ' ';
+	MapBuff[playerPosX-1][1] = ' ';
+	MapBuff[playerPosX][2] = ' ';
+	MapBuff[playerPosX-1][playerPosY] = ' ';
+	MapBuff[playerPosX][playerPosY-1] = ' ';
 	for(size_t i = 0; i < MapBuff.size(); i += 1) {
 		std::cout << MapBuff[i] << std::endl;
 	}
